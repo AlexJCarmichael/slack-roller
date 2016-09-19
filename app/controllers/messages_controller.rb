@@ -3,3 +3,4 @@ class MessagesController < ApplicationController
     message = Message.new(message_params)
     message.roll_dice
   end
+end
