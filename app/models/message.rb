@@ -7,11 +7,11 @@ class Message < ApplicationRecord
       original = self.body[/\d{1,3}d\d{1,3}/]
       rolls = num_times.times.collect { return_die_result(num_of_sides) }
       self.body = "#{self.user_name} rolls #{original}, resulting in"\
-                  " #{rolls.join(", ")} for a total of #{rolls.reduce(:+)}"
+                  " *#{rolls.join(", ")}* for a total of *#{rolls.reduce(:+)}*"
     else
       rolls = 2.times.collect { return_die_result(6) }
-      self.body = "#{self.user_name} rolls two six-sided die resulting in #{rolls.join(", ")}"\
-                  " for a total of #{rolls.reduce(:+)}"
+      self.body = "#{self.user_name} rolls two six-sided die resulting in *#{rolls.join(", ")}*"\
+                  " for a total of *#{rolls.reduce(:+)}*"
     end
   end
 
