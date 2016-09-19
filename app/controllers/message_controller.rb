@@ -1,6 +1,12 @@
 class MessageController < ApplicationController
   def roll
-    message = Message.new(message_params)
+    body = message_params[:text]
+    message = Message.new(body: body, user_name: message_params[:user_name])
     message.roll_dice
+    render json: { message: message.body }
+  end
+
+  def message_params
+   params.permit(:text, :user_name)
   end
 end
