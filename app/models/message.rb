@@ -22,7 +22,7 @@ class Message < ApplicationRecord
         original.gsub!(/(- |\+\ |\/\ |\*\ )\d*/, "#{opperator} #{modifier}")
         self.body = "#{self.user_name} rolls #{original}, resulting in"\
                     " *#{rolls.join(", ")}* for a total of"\
-                    "*#{rolls.reduce(:+).send(opperator.to_sym, modifier.to_i)}*"\
+                    " *#{rolls.reduce(:+).send(opperator.to_sym, modifier.to_i)}*"\
                     + dropped_message(dropped)
       else
         self.body = "#{self.user_name} rolls #{original}, resulting in"\
