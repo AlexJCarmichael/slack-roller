@@ -6,7 +6,7 @@ class Message < ApplicationRecord
   def roll_dice
     if self.body[/\d{1,3}d\d{1,3}/]
       num_times = self.body[/\b\d{1,3}/].to_i
-      num_of_sides = self.body[/d\d{1,3}/].to_i
+      num_of_sides = self.body[/d\d*/][/\d{1,3}/].to_i
       rolls = roll(num_times, num_of_sides)
       if self.body[/drop/]
         sorted = rolls.sort
