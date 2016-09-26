@@ -1,9 +1,12 @@
 require 'securerandom'
 class Message < ApplicationRecord
+
+  MODIFIERS = []
+
   def roll_dice
     if self.body[/\d{1,3}d\d{1,3}/]
       num_times = self.body[/\b\d{1,3}/].to_i
-      num_of_sides = self.body[/\d{1,3}\b/].to_i
+      num_of_sides = self.body[/d\d{1,3}/].to_i
       rolls = roll(num_times, num_of_sides)
       if self.body[/drop/]
         sorted = rolls.sort
@@ -34,6 +37,9 @@ class Message < ApplicationRecord
       self.body = "#{self.user_name} rolls two six-sided die resulting in *#{rolls.join(", ")}*"\
                   " for a total of *#{rolls.reduce(:+)}*"
     end
+  end
+
+  def parse_message(body, reg_ex)
   end
 
   def roll(num_times = 2, sides = 6)
