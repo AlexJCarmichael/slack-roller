@@ -1,12 +1,18 @@
 require 'securerandom'
 class Message < ApplicationRecord
 
-  MODIFIERS = []
+  MODIFIERS = [
+               [:times_rolled, '\b\d{1,3}'],
+               [:sides_to_die, 'd\d*'],
+               [:dropped_die, 'drop'],
+               [:attachment, '(- |\+\ |\/\ |\*\ )\d*']
+             ]
 
   def roll_dice
     if self.body[/\d{1,3}d\d{1,3}/]
-      num_times = self.body[/\b\d{1,3}/].to_i
-      num_of_sides = self.body[/d\d*/][/\d{1,3}/].to_i
+      roll_params = parse_message
+      roll_params = numberize_die(roll_params)
+      binding.pry
       rolls = roll(num_times, num_of_sides)
       if self.body[/drop/]
         sorted = rolls.sort
@@ -17,7 +23,6 @@ class Message < ApplicationRecord
         end
       end
       original = self.body
-      attachment = self.body[/(- |\+\ |\/\ |\*\ )\d*/]
       rolls = sorted || rolls
       if attachment
         opperator = attachment[0]
@@ -39,7 +44,16 @@ class Message < ApplicationRecord
     end
   end
 
-  def parse_message(body, reg_ex)
+  def parse_message
+    Hash[MODIFIERS.map do |value, reg_ex|
+      [ value, self.body[Regexp.new reg_ex] ]
+    end]
+  end
+
+  def numberize_die(roll_params)
+    roll_params[:times_rolled] = roll_params[:times_rolled].to_i
+    roll_params[:sides_to_die] = roll_params[:sides_to_die][/\d{1,3}/].to_i
+    return roll_params
   end
 
   def roll(num_times = 2, sides = 6)
