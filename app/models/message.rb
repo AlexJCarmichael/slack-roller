@@ -1,46 +1,32 @@
 require 'securerandom'
+class Attachment < Struct.new(:operator, :modifier)
+end
+
 class Message < ApplicationRecord
 
   MODIFIERS = [
                [:times_rolled, '\b\d{1,3}'],
                [:sides_to_die, 'd\d*'],
                [:dropped_die, 'drop'],
-               [:attachment, '(- |\+\ |\/\ |\*\ )\d*']
+               [:attachment, '([-\+\*\\/] ?)\d*']
              ]
 
   def roll_dice
     if self.body[/\d{1,3}d\d{1,3}/]
       roll_params = parse_message
       roll_params = numberize_die(roll_params)
-      binding.pry
-      rolls = roll(num_times, num_of_sides)
-      if self.body[/drop/]
-        sorted = rolls.sort
-        if self.body[/High/] || self.body[/high/]
-          dropped = sorted.pop
-        elsif self.body[/Low/] || self.body[/low/]
-          dropped = sorted.shift
-        end
-      end
-      original = self.body
-      rolls = sorted || rolls
-      if attachment
-        opperator = attachment[0]
-        modifier = attachment[/\d{1,3}/]
-        original.gsub!(/(- |\+\ |\/\ |\*\ )\d*/, "#{opperator} #{modifier}")
-        self.body = "#{self.user_name} rolls #{original}, resulting in"\
-                    " *#{rolls.join(", ")}* for a total of"\
-                    " *#{rolls.reduce(:+).send(opperator.to_sym, modifier.to_i)}*"\
-                    + dropped_message(dropped)
+      rolls = roll(roll_params[:times_rolled],
+                   roll_params[:sides_to_die])
+      rolls, dropped = sorted_drop(rolls) if roll_params[:dropped_die]
+      if roll_params[:attachment]
+        attach = Attachment.new(roll_params[:attachment][0],
+                                roll_params[:attachment][/\d{1,3}/])
+        self.body = build_roll_message(rolls, attach, dropped)
       else
-        self.body = "#{self.user_name} rolls #{original}, resulting in"\
-                    " *#{rolls.join(", ")}* for a total of *#{rolls.reduce(:+)}*"\
-                    + dropped_message(dropped)
+        self.body = build_roll_message(rolls, dropped)
       end
     else
-      rolls = roll
-      self.body = "#{self.user_name} rolls two six-sided die resulting in *#{rolls.join(", ")}*"\
-                  " for a total of *#{rolls.reduce(:+)}*"
+      self.body = build_roll_message(roll)
     end
   end
 
@@ -58,6 +44,28 @@ class Message < ApplicationRecord
 
   def roll(num_times = 2, sides = 6)
     num_times.times.collect { return_die_result(sides) }
+  end
+
+  def sorted_drop(rolls)
+    rolls.sort!
+    if self.body.downcase[/high/]
+      dropped = rolls.pop
+    else
+      dropped = rolls.shift
+    end
+    [rolls, dropped]
+  end
+
+  def build_roll_message(rolls, attach = nil, dropped = nil)
+    total = rolls.sum
+    if attach
+      total = total.public_send(attach.operator.to_sym,
+                                attach.modifier.to_i)
+    end
+    "#{self.user_name} rolls #{self.body}, resulting in"\
+    " *#{rolls.join(", ")}* for a total of"\
+    " *#{total}*"\
+    + dropped_message(dropped)
   end
 
   def dropped_message(dropped = nil)
