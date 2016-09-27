@@ -1,5 +1,13 @@
 require 'securerandom'
 class Attachment < Struct.new(:operator, :modifier)
+
+  def op
+    self.operator.to_sym
+  end
+
+  def mod
+    self.modifier.to_i
+  end
 end
 
 class Message < ApplicationRecord
@@ -23,7 +31,7 @@ class Message < ApplicationRecord
                                 roll_params[:attachment][/\d{1,3}/])
         self.body = build_roll_message(rolls, attach, dropped)
       else
-        self.body = build_roll_message(rolls, dropped)
+        self.body = build_roll_message(rolls, nil, dropped)
       end
     else
       self.body = build_roll_message(roll)
@@ -59,21 +67,15 @@ class Message < ApplicationRecord
   def build_roll_message(rolls, attach = nil, dropped = nil)
     total = rolls.sum
     if attach
-      total = total.public_send(attach.operator.to_sym,
-                                attach.modifier.to_i)
+      total = total.public_send(attach.op, attach.mod)
     end
     "#{self.user_name} rolls #{self.body}, resulting in"\
     " *#{rolls.join(", ")}* for a total of"\
-    " *#{total}*"\
-    + dropped_message(dropped)
+    " *#{total}* #{dropped_message(dropped)}"
   end
 
   def dropped_message(dropped = nil)
-    if dropped
-      " _dropped #{dropped}_"
-    else
-      ""
-    end
+    " _dropped #{dropped}_" if dropped
   end
 
   def return_die_result(sides)
