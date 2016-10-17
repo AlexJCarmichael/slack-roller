@@ -81,4 +81,8 @@ class Message < ApplicationRecord
   def return_die_result(sides)
     SecureRandom.random_number(1..sides)
   end
+
+  def beer
+    "K-chhhh"
+  end
 end
