@@ -10,10 +10,16 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160919022111) do
+ActiveRecord::Schema.define(version: 20161017222734) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
+
+  create_table "characters", force: :cascade do |t|
+    t.string   "char_name",  null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
 
   create_table "messages", force: :cascade do |t|
     t.string   "body"
@@ -22,4 +28,18 @@ ActiveRecord::Schema.define(version: 20160919022111) do
     t.string   "user_name"
   end
 
+  create_table "stats", force: :cascade do |t|
+    t.integer  "characters_id"
+    t.integer  "str",           null: false
+    t.integer  "dex",           null: false
+    t.integer  "con",           null: false
+    t.integer  "int",           null: false
+    t.integer  "wis",           null: false
+    t.integer  "cha",           null: false
+    t.datetime "created_at",    null: false
+    t.datetime "updated_at",    null: false
+    t.index ["characters_id"], name: "index_stats_on_characters_id", using: :btree
+  end
+
+  add_foreign_key "stats", "characters", column: "characters_id"
 end
