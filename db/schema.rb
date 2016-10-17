@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20161017222734) do
+ActiveRecord::Schema.define(version: 20161017234227) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -29,17 +29,17 @@ ActiveRecord::Schema.define(version: 20161017222734) do
   end
 
   create_table "stats", force: :cascade do |t|
-    t.integer  "characters_id"
-    t.integer  "str",           null: false
-    t.integer  "dex",           null: false
-    t.integer  "con",           null: false
-    t.integer  "int",           null: false
-    t.integer  "wis",           null: false
-    t.integer  "cha",           null: false
-    t.datetime "created_at",    null: false
-    t.datetime "updated_at",    null: false
-    t.index ["characters_id"], name: "index_stats_on_characters_id", using: :btree
+    t.integer  "character_id"
+    t.integer  "str",          null: false
+    t.integer  "dex",          null: false
+    t.integer  "con",          null: false
+    t.integer  "int",          null: false
+    t.integer  "wis",          null: false
+    t.integer  "cha",          null: false
+    t.datetime "created_at",   null: false
+    t.datetime "updated_at",   null: false
+    t.index ["character_id"], name: "index_stats_on_character_id", using: :btree
   end
 
-  add_foreign_key "stats", "characters", column: "characters_id"
+  add_foreign_key "stats", "characters"
 end

@@ -1,5 +1,7 @@
 Rails.application.routes.draw do
+  resources :stats
+  resources :characters
   post "roll", to: 'message#roll', as: "roll"
   post "beer", to: 'message#beer', as: "beer"
-  post "character", to: 'character#create', as: "new_char"
+  post "new_char", to: 'characters#create', as: "new_char"
 end

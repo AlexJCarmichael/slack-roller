@@ -1,3 +1,3 @@
-class Character < ActiveRecord::Migration[5.0]
+class Character < ApplicationRecord
   has_many :stats
 end
