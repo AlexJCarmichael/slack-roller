@@ -83,6 +83,10 @@ class Message < ApplicationRecord
   end
 
   def beer
-    "K-chhhh"
+    if self.user_name["mattrice"]
+      "Slack-bot tosses Thūm a refreshing beer. *K-chhhh*"
+    else
+      "Thūm drank all the beer. Get your own."
+    end
   end
 end

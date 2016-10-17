@@ -9,8 +9,8 @@ class MessageController < ApplicationController
 
   def beer
     body = message_params[:text]
-    message = Message.new(body: body, user_name: message_params[:user_name])
-    message.beer
+    user_name = message_params[:user_name]
+    message = Message.new(body: body, user_name: user_name)
     render json: { response_type: "in_channel",
                    text: message.beer }
   end
