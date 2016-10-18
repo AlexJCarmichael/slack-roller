@@ -21,21 +21,16 @@ class MessageController < ApplicationController
 
     message = Message.new(body: body, user_name: user_name)
 
-    character = Character.create(user_name: user_name, character_name: message.parse_new_character["character_name"])
+    parser = message.parse_new_character
 
-    attributes = Attribute.create(character_id: character.id,
-                        strength:     message.parse_new_character["strength"],
-                        dexterity:    message.parse_new_character["dexterity"],
-                        constitution: message.parse_new_character["constitution"],
-                        intelligence: message.parse_new_character["intelligence"],
-                        wisdom:       message.parse_new_character["wisdom"],
-                        charisma:     message.parse_new_character["charisma"])
+    character = Character.new
+    character.create_char(parser, message.user_name)
 
-    modifiers = Modifier.create(character_id: character.id,
-                      weapon_modifier: message.parse_new_character["weapon_modifier"],
-                      armor_modifier:  message.parse_new_character["armor_modifier"])
+    attributes = Attribute.new
+    attributes.create_attributes(parser, character)
 
-
+    modifiers = Modifier.new
+    modifiers.create_modifiers(parser, character)
 
     render json: { response_type: "in_channel",
 
