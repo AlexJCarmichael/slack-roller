@@ -71,7 +71,7 @@ class Message < ApplicationRecord
     end
     "#{self.user_name} rolls #{self.body}, resulting in"\
     " *#{rolls.join(", ")}* for a total of"\
-    " *#{total}* #{dropped_message(dropped)}"
+    " *#{total}*#{dropped_message(dropped)}"
   end
 
   def dropped_message(dropped = nil)
