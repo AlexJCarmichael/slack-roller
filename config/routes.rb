@@ -1,4 +1,5 @@
 Rails.application.routes.draw do
+  resources :mods
   resources :stats
   resources :characters
   post "roll", to: 'message#roll', as: "roll"

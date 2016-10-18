@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20161017234227) do
+ActiveRecord::Schema.define(version: 20161017235411) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -28,6 +28,15 @@ ActiveRecord::Schema.define(version: 20161017234227) do
     t.string   "user_name"
   end
 
+  create_table "mods", force: :cascade do |t|
+    t.integer  "character_id"
+    t.integer  "weapon_mod"
+    t.integer  "armor_mod"
+    t.datetime "created_at",   null: false
+    t.datetime "updated_at",   null: false
+    t.index ["character_id"], name: "index_mods_on_character_id", using: :btree
+  end
+
   create_table "stats", force: :cascade do |t|
     t.integer  "character_id"
     t.integer  "str",          null: false
@@ -41,5 +50,6 @@ ActiveRecord::Schema.define(version: 20161017234227) do
     t.index ["character_id"], name: "index_stats_on_character_id", using: :btree
   end
 
+  add_foreign_key "mods", "characters"
   add_foreign_key "stats", "characters"
 end
