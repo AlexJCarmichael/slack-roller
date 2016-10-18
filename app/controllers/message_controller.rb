@@ -21,31 +21,36 @@ class MessageController < ApplicationController
 
     message = Message.new(body: body, user_name: user_name)
 
-    character = Character.create(user_name: user_name, char_name: message.parse_new_character["char_name"])
+    character = Character.create(user_name: user_name, character_name: message.parse_new_character["character_name"])
 
-    stats = Stat.create(character_id: character.id,
-                        str: message.parse_new_character["str"],
-                        dex: message.parse_new_character["dex"],
-                        con: message.parse_new_character["con"],
-                        int: message.parse_new_character["int"],
-                        wis: message.parse_new_character["wis"],
-                        cha: message.parse_new_character["cha"])
+    attributes = Attribute.create(character_id: character.id,
+                        strength:     message.parse_new_character["strength"],
+                        dexterity:    message.parse_new_character["dexterity"],
+                        constitution: message.parse_new_character["constitution"],
+                        intelligence: message.parse_new_character["intelligence"],
+                        wisdom:       message.parse_new_character["wisdom"],
+                        charisma:     message.parse_new_character["charisma"])
 
-    mods = Mod.create(character_id: character.id,
-                      weapon_mod: message.parse_new_character["weapon_mod"],
-                      armor_mod:  message.parse_new_character["armor_mod"])
+    modifiers = Modifier.create(character_id: character.id,
+                      weapon_modifier: message.parse_new_character["weapon_modifier"],
+                      armor_modifier:  message.parse_new_character["armor_modifier"])
 
 
 
     render json: { response_type: "in_channel",
-                   user_name: character.user_name,
-                   char_name: character.char_name,
 
-                   str: stats.str, dex: stats.dex, con: stats.con,
-                   int: stats.int, wis: stats.wis, cha: stats.cha,
+                   user_name:     character.user_name,
+                   char_name:     character.character_name,
 
-                   weapon_mod: mods.weapon_mod,
-                   armor_mod:  mods.armor_mod,
+                   strength:      attributes.strength,
+                   dexterity:     attributes.dexterity,
+                   constitution:  attributes.constitution,
+                   intelligence:  attributes.intelligence,
+                   wisdom:        attributes.wisdom,
+                   charisma:      attributes.charisma,
+
+                   weapon_mod:    modifiers.weapon_modifier,
+                   armor_mod:     modifiers.armor_modifier,
 
                    text: message.new_char_message
                  }

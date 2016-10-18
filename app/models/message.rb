@@ -106,15 +106,15 @@ class Message < ApplicationRecord
   end
 
   def new_char_message
-    """#{self.user_name} birthed a new character, #{parse_new_character["char_name"]}, with the following stats:
-    Strength: #{parse_new_character["str"]}
-    Dexterity: #{parse_new_character["dex"]}
-    Constitution: #{parse_new_character["con"]}
-    Intelligence: #{parse_new_character["int"]}
-    Wisdom: #{parse_new_character["wis"]}
-    Charisma: #{parse_new_character["cha"]}
-    Weapon Mod(s): #{parse_new_character["weapon_mod"]}
-    Armor Mod(s): #{parse_new_character["armor_mod"]}"""
+    """#{self.user_name} birthed a new character, #{parse_new_character["character_name"]}, with the following stats:
+    Strength: #{parse_new_character["strength"]}
+    Dexterity: #{parse_new_character["dexterity"]}
+    Constitution: #{parse_new_character["constitution"]}
+    Intelligence: #{parse_new_character["intelligence"]}
+    Wisdom: #{parse_new_character["wisdom"]}
+    Charisma: #{parse_new_character["charisma"]}
+    Weapon Modifier(s): #{parse_new_character["weapon_modifier"]}
+    Armor Modifier(s): #{parse_new_character["armor_modifier"]}"""
   end
 
 end

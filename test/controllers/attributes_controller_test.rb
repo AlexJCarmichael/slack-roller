@@ -1,6 +1,6 @@
 require 'test_helper'
 
-class ModTest < ActiveSupport::TestCase
+class AttributesControllerTest < ActionDispatch::IntegrationTest
   # test "the truth" do
   #   assert true
   # end

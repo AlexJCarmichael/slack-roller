@@ -1,6 +1,6 @@
 Rails.application.routes.draw do
-  resources :mods
-  resources :stats
+  resources :modifiers
+  resources :attributes
   resources :characters
   post "roll", to: 'message#roll', as: "roll"
   post "beer", to: 'message#beer', as: "beer"
