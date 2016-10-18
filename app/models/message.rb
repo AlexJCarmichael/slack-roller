@@ -89,4 +89,20 @@ class Message < ApplicationRecord
       "Thūm drank all the beer. Get your own."
     end
   end
+
+  def new_char
+    self.parse_new_character
+  end
+
+  def parse_new_character
+    body_arr = self.body.split(', ')
+    body_item = body_arr.map do |input|
+      a = input.split(' ')
+      a[0] = "\"" + a[0][0..-2] + "\"" + a[0][-1] + " \"" + a[1] + "\", "
+    end
+    b = body_item.join()
+    c = "{" + b[0..-3] + "}"
+    JSON.parse c
+  end
+
 end
