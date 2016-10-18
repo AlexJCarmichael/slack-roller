@@ -18,8 +18,10 @@ class MessageController < ApplicationController
   def new_character
     body = message_params[:text]
     user_name = message_params[:user_name]
-
-    character = Character.create(char_name: params[:char_name])
+    # pry.rails
+    message = Message.new(body: body, user_name: user_name)
+    # pry.rails
+    character = Character.create(char_name: message.parse_new_character["char_name"])
 
     # stats = Stat.create(character_id: character.id,
     #                     str: params[:str], dex: params[:dex], con: params[:con],
@@ -29,7 +31,6 @@ class MessageController < ApplicationController
     #                   weapon_mod: params[:weapon_mod],
     #                   armor_mod:  params[:armor_mod])
 
-    message = Message.new(body: body, user_name: user_name)
 
 
     render json: { response_type: "in_channel",
