@@ -10,10 +10,19 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20161019040036) do
+ActiveRecord::Schema.define(version: 20161019225458) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
+
+  create_table "actor_characters", force: :cascade do |t|
+    t.integer  "character_id"
+    t.integer  "actor_id"
+    t.datetime "created_at",   null: false
+    t.datetime "updated_at",   null: false
+    t.index ["actor_id"], name: "index_actor_characters_on_actor_id", using: :btree
+    t.index ["character_id"], name: "index_actor_characters_on_character_id", using: :btree
+  end
 
   create_table "actors", force: :cascade do |t|
     t.string   "name",       null: false
@@ -47,6 +56,15 @@ ActiveRecord::Schema.define(version: 20161019040036) do
     t.index ["actor_id"], name: "index_characters_on_actor_id", using: :btree
   end
 
+  create_table "current_actors", force: :cascade do |t|
+    t.integer  "character_id"
+    t.integer  "actor_id"
+    t.datetime "created_at",   null: false
+    t.datetime "updated_at",   null: false
+    t.index ["actor_id"], name: "index_current_actors_on_actor_id", using: :btree
+    t.index ["character_id"], name: "index_current_actors_on_character_id", using: :btree
+  end
+
   create_table "messages", force: :cascade do |t|
     t.string   "body"
     t.datetime "created_at", null: false
@@ -68,8 +86,12 @@ ActiveRecord::Schema.define(version: 20161019040036) do
     t.datetime "updated_at",             null: false
   end
 
+  add_foreign_key "actor_characters", "actors"
+  add_foreign_key "actor_characters", "characters"
   add_foreign_key "character_modifiers", "characters"
   add_foreign_key "character_modifiers", "modifiers"
   add_foreign_key "character_stats", "characters"
   add_foreign_key "character_stats", "stats"
+  add_foreign_key "current_actors", "actors"
+  add_foreign_key "current_actors", "characters"
 end

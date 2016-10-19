@@ -1,6 +1,8 @@
 class Character < ApplicationRecord
   belongs_to :actor
 
+  has_one :actor_character
+
   has_many :character_stats
   has_many :stats, through: :character_stats
 
@@ -37,8 +39,8 @@ class Character < ApplicationRecord
     Actor.find_by(name: actor)
   end
 
-  def new_char_message
-    """#{actor.name} birthed a new character, #{name}, with the following stats:
+  def character_sheet
+    """#{actor.name} created a new character, #{name}, with the following stats:
     Strength: #{attribute_call("strength", stats)}
     Dexterity: #{attribute_call("dexterity", stats)}
     Constitution: #{attribute_call("constitution", stats)}
