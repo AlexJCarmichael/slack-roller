@@ -2,18 +2,18 @@
 
 weapon_mod_thum:
   character: thum
-  modifier: weapon
+  modifier: weapon_thum
 
 armor_mod_thum:
   character: thum
-  modifier: armor
+  modifier: armor_thum
 
 #########################
 
 weapon_mod_danekin:
   character: danekin
-  modifier: weapon
+  modifier: weapon_danekin
 
 armor_mod_danekin:
   character: danekin
-  modifier: armor
+  modifier: armor_danekin

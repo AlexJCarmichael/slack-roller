@@ -6,8 +6,7 @@ class CharacterTest < ActiveSupport::TestCase
     @dane = Actor.find_by(name: "dane")
   end
 
-
-  test "check that character exists" do
+  test "character exists" do
     assert_equal("Thūm", Character.find_by(name: "Thūm").name)
     assert_equal("Danekin Skydangler", Character.find_by(name: "Danekin Skydangler").name)
   end
@@ -25,7 +24,7 @@ class CharacterTest < ActiveSupport::TestCase
     assert_equal("Naba", Character.create(name: "Naba", actor_id: @mattrice.id).name)
   end
 
-  test "check validations" do
+  test "validations" do
     assert_raises("Validation failed: Actor must exist, Name can't be blank"){ Character.create!() }
     assert_raises("Validation failed: Actor must exist"){ Character.create!(name: "Dave") }
     assert_raises("Validation failed: Name can't be blank"){ Character.create!(actor_id: @mattrice.id) }
