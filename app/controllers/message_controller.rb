@@ -9,6 +9,8 @@ class MessageController < ApplicationController
     }
   end
 
+  private
+
   def message_params
    params.permit(:text, :user_name)
   end

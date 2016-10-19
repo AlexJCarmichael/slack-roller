@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20161018194241) do
+ActiveRecord::Schema.define(version: 20161019040036) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -21,6 +21,32 @@ ActiveRecord::Schema.define(version: 20161018194241) do
     t.datetime "updated_at", null: false
   end
 
+  create_table "character_modifiers", force: :cascade do |t|
+    t.integer  "character_id"
+    t.integer  "modifier_id"
+    t.datetime "created_at",   null: false
+    t.datetime "updated_at",   null: false
+    t.index ["character_id"], name: "index_character_modifiers_on_character_id", using: :btree
+    t.index ["modifier_id"], name: "index_character_modifiers_on_modifier_id", using: :btree
+  end
+
+  create_table "character_stats", force: :cascade do |t|
+    t.integer  "character_id"
+    t.integer  "stat_id"
+    t.datetime "created_at",   null: false
+    t.datetime "updated_at",   null: false
+    t.index ["character_id"], name: "index_character_stats_on_character_id", using: :btree
+    t.index ["stat_id"], name: "index_character_stats_on_stat_id", using: :btree
+  end
+
+  create_table "characters", force: :cascade do |t|
+    t.string   "name",       null: false
+    t.integer  "actor_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["actor_id"], name: "index_characters_on_actor_id", using: :btree
+  end
+
   create_table "messages", force: :cascade do |t|
     t.string   "body"
     t.datetime "created_at", null: false
@@ -28,4 +54,22 @@ ActiveRecord::Schema.define(version: 20161018194241) do
     t.string   "user_name"
   end
 
+  create_table "modifiers", force: :cascade do |t|
+    t.string   "name"
+    t.integer  "value",      default: 0
+    t.datetime "created_at",             null: false
+    t.datetime "updated_at",             null: false
+  end
+
+  create_table "stats", force: :cascade do |t|
+    t.string   "name"
+    t.integer  "value",      default: 0
+    t.datetime "created_at",             null: false
+    t.datetime "updated_at",             null: false
+  end
+
+  add_foreign_key "character_modifiers", "characters"
+  add_foreign_key "character_modifiers", "modifiers"
+  add_foreign_key "character_stats", "characters"
+  add_foreign_key "character_stats", "stats"
 end

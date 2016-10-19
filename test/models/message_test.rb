@@ -2,6 +2,7 @@ require 'test_helper'
 
 class MessageTest < ActiveSupport::TestCase
   def setup
+
     @msg = Message.new
     @msg1 = Message.new(body: "3d6", user_name: "dane")
     @msg2 = Message.new(body: "2d6 + 2", user_name: "dane")
