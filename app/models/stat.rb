@@ -2,18 +2,23 @@ class Stat < ApplicationRecord
   has_one :character_stat
   has_one :character, through: :character_stats
 
+  STATS_ARR = %w(strength dexterity constitution intelligence wisdom charisma)
+
+  validates :name, presence: true, inclusion: { in: STATS_ARR }
+  validates :value, presence: true, numericality: { only_integer: true,
+                                                    greater_than: -1,
+                                                    less_than: 19}
+
   def self.create_stats(parser, character)
-    stats_arr = %w(strength dexterity constitution intelligence wisdom charisma)
-    stats_arr.each do |s|
+    STATS_ARR.each do |s|
       name = s
       value = parser[s]
-      stat = Stat.new(name: name,
-                      value: value)
-      stat.save
+      value = 0 if value == nil
+      stat = Stat.create(name: name,
+                         value: value)
 
-      char_stat = CharacterStat.new(stat_id: stat.id,
-                                    character_id: character.id)
-      char_stat.save
+      CharacterStat.create(stat_id: stat.id,
+                           character_id: character.id)
     end
   end
 end

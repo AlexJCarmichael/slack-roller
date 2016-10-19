@@ -81,13 +81,4 @@ class Message < ApplicationRecord
   def return_die_result(sides)
     SecureRandom.random_number(1..sides)
   end
-
-  def beer
-    if self.user_name["mattrice"]
-      "Slack-bot tosses Thūm a refreshing beer. *K-chhhh*"
-    else
-      "Thūm drank all the beer. Get your own."
-    end
-  end
-
 end

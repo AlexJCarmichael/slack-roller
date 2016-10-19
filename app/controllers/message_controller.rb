@@ -9,14 +9,6 @@ class MessageController < ApplicationController
     }
   end
 
-  def beer
-    body = message_params[:text]
-    user_name = message_params[:user_name]
-    message = Message.new(body: body, user_name: user_name)
-    render json: { response_type: "in_channel",
-                   text: message.beer }
-  end
-
   private
 
   def message_params

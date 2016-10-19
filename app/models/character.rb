@@ -7,13 +7,13 @@ class Character < ApplicationRecord
   has_many :character_modifiers
   has_many :modifiers, through: :character_modifiers
 
-  # validates :char_name, presence: true, length: { maximum: 128}, uniqueness: true
+  validates :name, presence: true, uniqueness: true
 
   def new_char(actor_name, message)
     parsed_character = parse_message(message)
 
     self.actor = find_actor_id(actor_name)
-    self.name = parsed_character["name"]
+    self.name =  parsed_character["name"]
 
   end
 
@@ -46,11 +46,13 @@ class Character < ApplicationRecord
     Intelligence: #{attribute_call("intelligence", stats)}
     Wisdom: #{attribute_call("wisdom", stats)}
     Charisma: #{attribute_call("charisma", stats)}
-    Weapon Modifier(s): #{attribute_call("weapon_modifier", modifiers)}
-    Armor Modifier(s): #{attribute_call("armor_modifier", modifiers)}"""
+    Weapon Modifier(s): #{attribute_call("weapon", modifiers)}
+    Armor Modifier(s): #{attribute_call("armor", modifiers)}"""
   end
 
   def attribute_call(name, obj)
-    obj.find_by(name: name).value
+    if obj.find_by(name: name).value != nil
+      obj.find_by(name: name).value
+    end
   end
 end

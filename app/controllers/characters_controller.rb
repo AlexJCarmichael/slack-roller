@@ -11,9 +11,13 @@ class CharactersController < ApplicationController
                    }
     else
       render json: { response_type: "in_channel",
-                     text: "Failed to create character"
+                     text: error_message(char)
                    }
     end
+  end
 
+  private
+  def error_message(obj)
+    "#{obj.errors.first[0].capitalize} #{obj.errors.first[1]}."
   end
 end

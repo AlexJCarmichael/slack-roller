@@ -56,16 +56,16 @@ ActiveRecord::Schema.define(version: 20161019040036) do
 
   create_table "modifiers", force: :cascade do |t|
     t.string   "name"
-    t.integer  "value"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+    t.integer  "value",      default: 0
+    t.datetime "created_at",             null: false
+    t.datetime "updated_at",             null: false
   end
 
   create_table "stats", force: :cascade do |t|
     t.string   "name"
-    t.integer  "value"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+    t.integer  "value",      default: 0
+    t.datetime "created_at",             null: false
+    t.datetime "updated_at",             null: false
   end
 
   add_foreign_key "character_modifiers", "characters"
