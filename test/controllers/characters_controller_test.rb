@@ -3,9 +3,9 @@ require 'test_helper'
 class CharactersControllerTest < ActionDispatch::IntegrationTest
 
   test "create a simple character" do
-    post new_char_path, params: { user_name: "mattrice", text: "name: asdf, strength: 10" }
+    post new_char_path, params: { user_name: "mattrice", text: "name: SimpleChar, strength: 10" }
     assert_response :success
-    assert_equal ({"response_type"=>"in_channel", "text"=>"mattrice birthed a new character, asdf, with the following stats:
+    assert_equal ({"response_type"=>"in_channel", "text"=>"mattrice birthed a new character, SimpleChar, with the following stats:
     Strength: 10
     Dexterity: 0
     Constitution: 0
@@ -17,9 +17,9 @@ class CharactersControllerTest < ActionDispatch::IntegrationTest
   end
 
   test "create a full character" do
-    post new_char_path, params: { user_name: "mattrice", text: "name: Thūmbnail, strength: 16, dexterity: 15, constitution: 14, intelligence: 13, wisdom: 12, charisma: 11, weapon: 2, armor: 1" }
+    post new_char_path, params: { user_name: "mattrice", text: "name: ComplexChar, strength: 16, dexterity: 15, constitution: 14, intelligence: 13, wisdom: 12, charisma: 11, weapon: 2, armor: 1" }
     assert_response :success
-    assert_equal ({"response_type"=>"in_channel", "text"=>"mattrice birthed a new character, Thūmbnail, with the following stats:
+    assert_equal ({"response_type"=>"in_channel", "text"=>"mattrice birthed a new character, ComplexChar, with the following stats:
     Strength: 16
     Dexterity: 15
     Constitution: 14
