@@ -4,12 +4,16 @@ class CharactersController < ApplicationController
     message_text = params[:text]
     char = Character.new
     char.new_char(actor, message_text)
+    if char.save
+      char.roll_character(message_text)
+      render json: { response_type: "in_channel",
+                     text: char.new_char_message
+                   }
+    else
+      render json: { response_type: "in_channel",
+                     text: "Failed to create character"
+                   }
+    end
 
-    actor = Actor.find_by(name: user_name)
-    Character.create_char(parser, actor)
-
-    render json: { response_type: "in_channel",
-                   text: Character.new_char_message(body, user_name)
-                 }
   end
 end

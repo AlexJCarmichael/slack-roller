@@ -9,12 +9,18 @@ class Character < ApplicationRecord
 
   # validates :char_name, presence: true, length: { maximum: 128}, uniqueness: true
 
-  def new_char(actor, message)
-    actor = find_actor_id(actor)
+  def new_char(actor_name, message)
     parsed_character = parse_message(message)
-    character_name
-    Stat.create_stats(parser, character)
-    Modifier.create_modifiers(parser, character)
+
+    self.actor = find_actor_id(actor_name)
+    self.name = parsed_character["name"]
+
+  end
+
+  def roll_character(message)
+    parsed_character = parse_message(message)
+    Stat.create_stats(parsed_character, self)
+    Modifier.create_modifiers(parsed_character, self)
   end
 
   def parse_message(message)
@@ -25,7 +31,6 @@ class Character < ApplicationRecord
     end
     b = message_item.join()
     c = "{" + b[0..-3] + "}"
-    binding.pry
     JSON.parse c
   end
 
@@ -33,16 +38,19 @@ class Character < ApplicationRecord
     Actor.find_by(name: actor)
   end
 
-  def self.new_char_message(body, user_name)
-    """#{user_name} birthed a new character, #{parse_new_character(body)["character_name"]}, with the following stats:
-    Strength: #{parse_new_character(body)["strength"]}
-    Dexterity: #{parse_new_character(body)["dexterity"]}
-    Constitution: #{parse_new_character(body)["constitution"]}
-    Intelligence: #{parse_new_character(body)["intelligence"]}
-    Wisdom: #{parse_new_character(body)["wisdom"]}
-    Charisma: #{parse_new_character(body)["charisma"]}
-    Weapon Modifier(s): #{parse_new_character(body)["weapon_modifier"]}
-    Armor Modifier(s): #{parse_new_character(body)["armor_modifier"]}"""
+  def new_char_message
+    """#{actor.name} birthed a new character, #{name}, with the following stats:
+    Strength: #{attribute_call("strength", stats)}
+    Dexterity: #{attribute_call("dexterity", stats)}
+    Constitution: #{attribute_call("constitution", stats)}
+    Intelligence: #{attribute_call("intelligence", stats)}
+    Wisdom: #{attribute_call("wisdom", stats)}
+    Charisma: #{attribute_call("charisma", stats)}
+    Weapon Modifier(s): #{attribute_call("weapon_modifier", modifiers)}
+    Armor Modifier(s): #{attribute_call("armor_modifier", modifiers)}"""
   end
 
+  def attribute_call(name, obj)
+    obj.find_by(name: name).value
+  end
 end
