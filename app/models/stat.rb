@@ -11,7 +11,7 @@ class Stat < ApplicationRecord
       stat = Stat.new(stat_name: stat_name, stat_value: stat_value)
       stat.save
 
-      statable = Statable.new(stat_id: stat.id, character_id: character)
+      statable = Statable.new(stat_id: stat.id, character_id: character.id)
       statable.save
     end
   end

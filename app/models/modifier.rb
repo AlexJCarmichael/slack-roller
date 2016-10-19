@@ -13,7 +13,7 @@ class Modifier < ApplicationRecord
       mod = Modifier.new(modifier_name: modifier_name, modifier_value: modifier_value)
       mod.save
 
-      modifiable = Modifiable.new(modifier_id: mod.id, character_id: character)
+      modifiable = Modifiable.new(modifier_id: mod.id, character_id: character.id)
       modifiable.save
     end
   end

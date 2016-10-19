@@ -1,2 +1,0 @@
-class StatablesController < ApplicationController
-end

@@ -90,31 +90,4 @@ class Message < ApplicationRecord
     end
   end
 
-  def new_char
-    self.parse_new_character
-  end
-
-  def parse_new_character
-    body_arr = self.body.split(', ')
-    body_item = body_arr.map do |input|
-      a = input.split(' ')
-      a[0] = "\"" + a[0][0..-2] + "\"" + a[0][-1] + " \"" + a[1] + "\", "
-    end
-    b = body_item.join()
-    c = "{" + b[0..-3] + "}"
-    JSON.parse c
-  end
-
-  def new_char_message
-    """#{self.user_name} birthed a new character, #{parse_new_character["character_name"]}, with the following stats:
-    Strength: #{parse_new_character["strength"]}
-    Dexterity: #{parse_new_character["dexterity"]}
-    Constitution: #{parse_new_character["constitution"]}
-    Intelligence: #{parse_new_character["intelligence"]}
-    Wisdom: #{parse_new_character["wisdom"]}
-    Charisma: #{parse_new_character["charisma"]}
-    Weapon Modifier(s): #{parse_new_character["weapon_modifier"]}
-    Armor Modifier(s): #{parse_new_character["armor_modifier"]}"""
-  end
-
 end
