@@ -1,7 +1,9 @@
 # Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
 
-one:
-  character: one
+weapon:
+  name: weapon
+  value: 2
 
-two:
-  character: two
+armor:
+  name: armor
+  value: 1

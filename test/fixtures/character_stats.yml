@@ -1,0 +1,25 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+strength:
+  character: mattrice
+  stat: strength
+
+dexterity:
+  character: mattrice
+  stat: dexterity
+
+constitution:
+  character: mattrice
+  stat: constitution
+
+intelligence:
+  character: mattrice
+  stat: intelligence
+
+wisdom:
+  character: mattrice
+  stat: wisdom
+
+charisma:
+  character: mattrice
+  stat: charisma

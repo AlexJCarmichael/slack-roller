@@ -1,9 +1,25 @@
 # Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
 
-one:
-  character: one
-  attribute: 1
+strength:
+  name: strength
+  value: 16
 
-two:
-  character: two
-  attribute: 1
+dexterity:
+  name: dexterity
+  value: 15
+
+constitution:
+  name: constitution
+  value: 14
+
+intelligence:
+  name: intelligence
+  value: 13
+
+wisdom:
+  name: wisdom
+  value: 12
+
+charisma:
+  name: charisma
+  value: 11
