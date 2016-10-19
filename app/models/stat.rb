@@ -4,7 +4,7 @@ class Stat < ApplicationRecord
 
   STATS_ARR = %w(strength dexterity constitution intelligence wisdom charisma)
 
-  validates :name, presence: true, inclusion: { in: STATS_ARR }
+  validates :name,  presence: true, inclusion:    { in: STATS_ARR }
   validates :value, presence: true, numericality: { only_integer: true,
                                                     greater_than: -1,
                                                     less_than: 19}

@@ -31,4 +31,17 @@ class StatTest < ActiveSupport::TestCase
     assert_equal("charisma", @dane.characters.first.stats.find_by(name: "charisma").name)
     assert_equal(11,         @dane.characters.first.stats.find_by(name: "charisma").value)
   end
+
+  test "create new stats" do
+    assert_equal("strength", Stat.create!(name: "strength",  value: 14).name)
+    assert_equal(15,         Stat.create!(name: "dexterity", value: 15).value)
+    assert_equal(0,          Stat.create!(name: "constitution").value)
+    assert_equal(0,          Stat.create!(name: "intelligence").value)
+  end
+
+  test "validations" do
+    assert_raises("Name can't be blank, Name is not included in the list"){ Stat.create!() }
+    assert_raises("Name can't be blank, Name is not included in the list"){ Stat.create!(value: 14) }
+    assert_raises("Name is not included in the list"){ Stat.create!(name: "deckstarity", value: 14) }
+  end
 end

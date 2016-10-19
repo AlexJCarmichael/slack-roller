@@ -4,7 +4,7 @@ class Modifier < ApplicationRecord
 
   MODIFIER_ARR = %w(weapon armor)
 
-  validates :name, presence: true, inclusion: { in: MODIFIER_ARR }
+  validates :name,  presence: true, inclusion:    { in: MODIFIER_ARR }
   validates :value, presence: true, numericality: { only_integer: true }
 
   def self.create_modifiers(parser, character)

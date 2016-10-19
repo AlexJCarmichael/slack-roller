@@ -39,4 +39,18 @@ class ModifierTest < ActiveSupport::TestCase
   test "actor through modifier" do
     assert_equal("dane",   Modifier.find_by(value: 25).character.actor.name)
   end
+
+  test "create new modifier" do
+    assert_equal("armor", Modifier.create!(name: "armor",  value: 2).name)
+    assert_equal(1,       Modifier.create!(name: "weapon", value: 1).value)
+    assert_equal(0,       Modifier.create!(name: "armor").value)
+    assert_equal(0,       Modifier.create!(name: "weapon").value)
+  end
+
+  test "validations" do
+    assert_raises("Name can't be blank, Name is not included in the list"){ Modifier.create!() }
+    assert_raises("Name can't be blank, Name is not included in the list"){ Modifier.create!(value: 14) }
+    assert_raises("Name is not included in the list"){ Modifier.create!(name: "Wepun", value: 14) }
+  end
+
 end

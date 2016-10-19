@@ -17,11 +17,11 @@ class CharacterTest < ActiveSupport::TestCase
   end
 
   test "create new character" do
-    assert_equal("Jawa", Character.create(name: "Jawa").name)
-    assert_equal("Jaba", Character.create(name: "Jaba", actor_id: @mattrice.id).name)
+    assert_equal("Jaba", Character.create!(name: "Jaba", actor_id: @mattrice.id).name)
+    assert_equal("mattrice", Character.create!(name: "Jawa", actor_id: @mattrice.id).actor.name)
 
-    assert_equal("dane", Character.create(name: "Nawa", actor_id: @dane.id).actor.name)
-    assert_equal("Naba", Character.create(name: "Naba", actor_id: @mattrice.id).name)
+    assert_equal("Naba", Character.create!(name: "Naba", actor_id: @mattrice.id).name)
+    assert_equal("dane", Character.create!(name: "Nawa", actor_id: @dane.id).actor.name)
   end
 
   test "validations" do
