@@ -15,19 +15,6 @@ ActiveRecord::Schema.define(version: 20161019010538) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
-  create_table "attributes", force: :cascade do |t|
-    t.integer  "character_id"
-    t.integer  "strength",     null: false
-    t.integer  "dexterity",    null: false
-    t.integer  "constitution", null: false
-    t.integer  "intelligence", null: false
-    t.integer  "wisdom",       null: false
-    t.integer  "charisma",     null: false
-    t.datetime "created_at",   null: false
-    t.datetime "updated_at",   null: false
-    t.index ["character_id"], name: "index_attributes_on_character_id", using: :btree
-  end
-
   create_table "characters", force: :cascade do |t|
     t.string   "character_name", null: false
     t.datetime "created_at",     null: false
@@ -44,22 +31,22 @@ ActiveRecord::Schema.define(version: 20161019010538) do
 
   create_table "modifiers", force: :cascade do |t|
     t.integer  "character_id"
-    t.integer  "weapon_modifier"
-    t.integer  "armor_modifier"
-    t.datetime "created_at",      null: false
-    t.datetime "updated_at",      null: false
+    t.string   "modifier_name"
+    t.integer  "modifier_value"
+    t.datetime "created_at",     null: false
+    t.datetime "updated_at",     null: false
     t.index ["character_id"], name: "index_modifiers_on_character_id", using: :btree
   end
 
   create_table "stats", force: :cascade do |t|
     t.integer  "character_id"
-    t.integer  "attribute"
+    t.string   "stat_name"
+    t.integer  "stat_value"
     t.datetime "created_at",   null: false
     t.datetime "updated_at",   null: false
     t.index ["character_id"], name: "index_stats_on_character_id", using: :btree
   end
 
-  add_foreign_key "attributes", "characters"
   add_foreign_key "modifiers", "characters"
   add_foreign_key "stats", "characters"
 end

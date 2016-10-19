@@ -3,8 +3,8 @@ class Modifier < ApplicationRecord
 
   def create_modifiers(parser, character)
     self.character_id = character.id
-    self.weapon_modifier = parser["weapon_modifier"]
-    self.armor_modifier = parser["armor_modifier"]
+    self.modifier_name = parser["weapon_modifier"]
+    self.modifier_value = parser[""]
     self.save
   end
 end
