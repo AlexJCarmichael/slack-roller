@@ -4,7 +4,9 @@ class CharactersController < ApplicationController
     message = Message.new(body: params[:text], user_name: user_name)
     parser = message.parse_new_character
 
-    character = Character.create_char(parser, user_name)
+    actor = Actor.find_by(name: user_name)
+
+    character = Character.create_char(parser, actor)
     Stat.create_stats(parser, character)
     Modifier.create_modifiers(parser, character)
 
