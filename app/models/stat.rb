@@ -1,6 +1,6 @@
 class Stat < ApplicationRecord
-  has_many :statables
-  has_many :characters, through: :statables
+  has_one :character_stat
+  has_one :character, through: :character_stats
 
 
   def self.create_stats(parser, character)

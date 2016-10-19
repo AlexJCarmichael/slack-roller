@@ -1,32 +1,36 @@
 class Character < ApplicationRecord
   belongs_to :actor
 
-  has_many :statables
-  has_many :stats, through: :statables
+  has_many :character_stats
+  has_many :stats, through: :character_stats
 
-  has_many :modifiables
-  has_many :modifiers, through: :modifiables
+  has_many :character_modifiers
+  has_many :modifiers, through: :character_modifiers
 
   # validates :char_name, presence: true, length: { maximum: 128}, uniqueness: true
 
-  def self.create_char(parser, actor)
-    character_name = parser["character_name"]
-    character = Character.new(actor_id: actor.id, character_name: character_name, user_name: actor.name)
-    character.save
-
+  def new_char(actor, message)
+    actor = find_actor_id(actor)
+    parsed_character = parse_message(message)
+    character_name
     Stat.create_stats(parser, character)
     Modifier.create_modifiers(parser, character)
   end
 
-  def self.parse_new_character(body)
-    body_arr = body.split(', ')
-    body_item = body_arr.map do |input|
+  def parse_message(message)
+    message_arr = message.split(', ')
+    message_item = message_arr.map do |input|
       a = input.split(' ')
       a[0] = "\"" + a[0][0..-2] + "\"" + a[0][-1] + " \"" + a[1] + "\", "
     end
-    b = body_item.join()
+    b = message_item.join()
     c = "{" + b[0..-3] + "}"
+    binding.pry
     JSON.parse c
+  end
+
+  def find_actor_id(actor)
+    Actor.find_by(name: actor)
   end
 
   def self.new_char_message(body, user_name)

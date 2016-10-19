@@ -1,7 +1,7 @@
 class Modifier < ApplicationRecord
 
-  has_many :modifiables
-  has_many :characters, through: :modifiables
+  has_one :character_modifier
+  has_one :character, through: :character_modifiers
 
 
 

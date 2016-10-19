@@ -1,8 +1,9 @@
 class CharactersController < ApplicationController
   def new_character
-    user_name = params[:user_name]
-    body = params[:text]
-    parser = Character.parse_new_character(body)
+    actor = params[:user_name]
+    message_text = params[:text]
+    char = Character.new
+    char.new_char(actor, message_text)
 
     actor = Actor.find_by(name: user_name)
     Character.create_char(parser, actor)

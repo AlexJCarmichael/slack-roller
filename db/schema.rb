@@ -21,12 +21,29 @@ ActiveRecord::Schema.define(version: 20161019040036) do
     t.datetime "updated_at", null: false
   end
 
+  create_table "character_modifiers", force: :cascade do |t|
+    t.integer  "character_id"
+    t.integer  "modifier_id"
+    t.datetime "created_at",   null: false
+    t.datetime "updated_at",   null: false
+    t.index ["character_id"], name: "index_character_modifiers_on_character_id", using: :btree
+    t.index ["modifier_id"], name: "index_character_modifiers_on_modifier_id", using: :btree
+  end
+
+  create_table "character_stats", force: :cascade do |t|
+    t.integer  "character_id"
+    t.integer  "stat_id"
+    t.datetime "created_at",   null: false
+    t.datetime "updated_at",   null: false
+    t.index ["character_id"], name: "index_character_stats_on_character_id", using: :btree
+    t.index ["stat_id"], name: "index_character_stats_on_stat_id", using: :btree
+  end
+
   create_table "characters", force: :cascade do |t|
-    t.string   "character_name", null: false
-    t.datetime "created_at",     null: false
-    t.datetime "updated_at",     null: false
-    t.string   "user_name"
+    t.string   "name",       null: false
     t.integer  "actor_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
     t.index ["actor_id"], name: "index_characters_on_actor_id", using: :btree
   end
 
@@ -37,41 +54,22 @@ ActiveRecord::Schema.define(version: 20161019040036) do
     t.string   "user_name"
   end
 
-  create_table "modifiables", force: :cascade do |t|
-    t.integer  "character_id"
-    t.integer  "modifier_id"
-    t.datetime "created_at",   null: false
-    t.datetime "updated_at",   null: false
-    t.index ["character_id"], name: "index_modifiables_on_character_id", using: :btree
-    t.index ["modifier_id"], name: "index_modifiables_on_modifier_id", using: :btree
-  end
-
   create_table "modifiers", force: :cascade do |t|
-    t.string   "modifier_name"
-    t.integer  "modifier_value"
-    t.datetime "created_at",     null: false
-    t.datetime "updated_at",     null: false
-  end
-
-  create_table "statables", force: :cascade do |t|
-    t.integer  "character_id"
-    t.integer  "stat_id"
-    t.datetime "created_at",   null: false
-    t.datetime "updated_at",   null: false
-    t.index ["character_id"], name: "index_statables_on_character_id", using: :btree
-    t.index ["stat_id"], name: "index_statables_on_stat_id", using: :btree
-  end
-
-  create_table "stats", force: :cascade do |t|
-    t.string   "stat_name"
-    t.integer  "stat_value"
+    t.string   "name"
+    t.integer  "value"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
   end
 
-  add_foreign_key "characters", "actors"
-  add_foreign_key "modifiables", "characters"
-  add_foreign_key "modifiables", "modifiers"
-  add_foreign_key "statables", "characters"
-  add_foreign_key "statables", "stats"
+  create_table "stats", force: :cascade do |t|
+    t.string   "name"
+    t.integer  "value"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
+  add_foreign_key "character_modifiers", "characters"
+  add_foreign_key "character_modifiers", "modifiers"
+  add_foreign_key "character_stats", "characters"
+  add_foreign_key "character_stats", "stats"
 end

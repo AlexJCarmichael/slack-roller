@@ -1,6 +1,6 @@
-class CreateModifiables < ActiveRecord::Migration[5.0]
+class CreateCharacterModifiers < ActiveRecord::Migration[5.0]
   def change
-    create_table :modifiables do |t|
+    create_table :character_modifiers do |t|
       t.belongs_to :character, foreign_key: true
       t.belongs_to :modifier, foreign_key: true
 
