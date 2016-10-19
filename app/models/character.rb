@@ -13,8 +13,7 @@ class Character < ApplicationRecord
     parsed_character = parse_message(message)
 
     self.actor = find_actor_id(actor_name)
-    self.name =  parsed_character["name"]
-
+    self.name = parsed_character["name"]
   end
 
   def roll_character(message)

@@ -1,5 +1,4 @@
 class Modifier < ApplicationRecord
-
   has_one :character_modifier
   has_one :character, through: :character_modifiers
 
@@ -8,12 +7,10 @@ class Modifier < ApplicationRecord
   validates :name, presence: true, inclusion: { in: MODIFIER_ARR }
   validates :value, presence: true, numericality: { only_integer: true }
 
-
   def self.create_modifiers(parser, character)
     MODIFIER_ARR.each do |s|
       name = s
-      value = parser[s]
-      value = 0 if value == nil
+      value = parser[s] || 0
       mod = Modifier.create(name: name,
                             value: value)
 

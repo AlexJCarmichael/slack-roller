@@ -8,3 +8,4 @@
 
 
 Actor.create!(name: "mattrice")
+Character.create!(name: "Thūm", actor_id: 1)

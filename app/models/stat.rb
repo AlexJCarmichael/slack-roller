@@ -12,8 +12,7 @@ class Stat < ApplicationRecord
   def self.create_stats(parser, character)
     STATS_ARR.each do |s|
       name = s
-      value = parser[s]
-      value = 0 if value == nil
+      value = parser[s] || 0
       stat = Stat.create(name: name,
                          value: value)
 
