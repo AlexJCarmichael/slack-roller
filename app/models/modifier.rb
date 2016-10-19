@@ -1,10 +1,13 @@
 class Modifier < ApplicationRecord
   belongs_to :character
 
-  def create_modifiers(parser, character)
-    self.character_id = character.id
-    self.modifier_name = parser["weapon_modifier"]
-    self.modifier_value = parser[""]
-    self.save
+  def self.create_modifiers(parser, character)
+    stats_arr = %w(weapon_modifier armor_modifier)
+    stats_arr.each do |s|
+      modifier_name = s
+      modifier_value = parser[s]
+      mod = Modifier.new(character_id: character.id, modifier_name: modifier_name, modifier_value: modifier_value)
+      mod.save
+    end
   end
 end

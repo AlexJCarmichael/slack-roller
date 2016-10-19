@@ -1,10 +1,13 @@
 class Stat < ApplicationRecord
   belongs_to :character
 
-  def create_attributes(parser, character)
-    self.character_id = character.id
-    self.stat_name = parser["strength"]
-    self.stat_value = parser[""]
-    self.save
+  def self.create_stats(parser, character)
+    stats_arr = %w(strength dexterity constitution intelligence wisdom charisma)
+    stats_arr.each do |s|
+      stat_name = s
+      stat_value = parser[s]
+      stat = Stat.new(character_id: character.id, stat_name: stat_name, stat_value: stat_value)
+      stat.save
+    end
   end
 end
