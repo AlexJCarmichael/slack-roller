@@ -7,6 +7,7 @@ class CharactersController < ApplicationController
     actor = Actor.find_by(name: user_name)
 
     character = Character.create_char(parser, actor)
+
     Stat.create_stats(parser, character)
     Modifier.create_modifiers(parser, character)
 

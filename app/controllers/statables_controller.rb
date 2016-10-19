@@ -1,0 +1,2 @@
+class StatablesController < ApplicationController
+end

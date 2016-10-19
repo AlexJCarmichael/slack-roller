@@ -1,0 +1,2 @@
+class ModifiablesController < ApplicationController
+end

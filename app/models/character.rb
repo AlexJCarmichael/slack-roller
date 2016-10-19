@@ -1,6 +1,11 @@
 class Character < ApplicationRecord
-  has_many :stats
-  has_many :modifiers
+  belongs_to :actor
+
+  has_many :statables
+  has_many :stats, through: :statables
+
+  has_many :modifiables
+  has_many :modifiers, through: :modifiables
 
   # validates :char_name, presence: true, length: { maximum: 128}, uniqueness: true
 
