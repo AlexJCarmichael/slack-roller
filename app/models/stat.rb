@@ -6,7 +6,7 @@ class Stat < ApplicationRecord
     stats_arr.each do |s|
       stat_name = s
       stat_value = parser[s]
-      stat = Stat.new(character_id: character.id, stat_name: stat_name, stat_value: stat_value)
+      stat = Stat.new(character_id: character, stat_name: stat_name, stat_value: stat_value)
       stat.save
     end
   end

@@ -1,14 +1,10 @@
 class CharactersController < ApplicationController
-
-
   def new_character
     user_name = params[:user_name]
     message = Message.new(body: params[:text], user_name: user_name)
     parser = message.parse_new_character
 
-    character = Character.new
-    character.create_char(parser, user_name)
-
+    character = Character.create_char(parser, user_name)
     Stat.create_stats(parser, character)
     Modifier.create_modifiers(parser, character)
 

@@ -4,10 +4,10 @@ class Character < ApplicationRecord
 
   # validates :char_name, presence: true, length: { maximum: 128}, uniqueness: true
 
-  def create_char(parser, user_name)
-    self.user_name = user_name
-    self.character_name = parser["character_name"]
-    self.save
+  def self.create_char(parser, user_name)
+    character_name = parser["character_name"]
+    character = Character.new(character_name: character_name, user_name: user_name)
+    character.save
   end
 
 

@@ -6,7 +6,7 @@ class Modifier < ApplicationRecord
     stats_arr.each do |s|
       modifier_name = s
       modifier_value = parser[s]
-      mod = Modifier.new(character_id: character.id, modifier_name: modifier_name, modifier_value: modifier_value)
+      mod = Modifier.new(character_id: character, modifier_name: modifier_name, modifier_value: modifier_value)
       mod.save
     end
   end
