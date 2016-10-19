@@ -13,7 +13,6 @@ class CharactersController < ApplicationController
     Modifier.create_modifiers(parser, character)
 
     render json: { response_type: "in_channel",
-                   parser: parser,
                    text: message.new_char_message
                  }
   end
