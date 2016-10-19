@@ -1,25 +1,51 @@
 # Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
 
-strength:
-  character: mattrice
+strength_thum:
+  character: thum
   stat: strength
 
-dexterity:
-  character: mattrice
+dexterity_thum:
+  character: thum
   stat: dexterity
 
-constitution:
-  character: mattrice
+constitution_thum:
+  character: thum
   stat: constitution
 
-intelligence:
-  character: mattrice
+intelligence_thum:
+  character: thum
   stat: intelligence
 
-wisdom:
-  character: mattrice
+wisdom_thum:
+  character: thum
   stat: wisdom
 
-charisma:
-  character: mattrice
+charisma_thum:
+  character: thum
+  stat: charisma
+
+#########################
+
+strength_danekin:
+  character: danekin
+  stat: strength
+
+dexterity_danekin:
+  character: danekin
+  stat: dexterity
+
+constitution_danekin:
+  character: danekin
+  stat: constitution
+
+intelligence_danekin:
+  character: danekin
+  stat: intelligence
+
+wisdom_danekin:
+  character: danekin
+  stat: wisdom
+
+charisma_danekin:
+  character: danekin
   stat: charisma
