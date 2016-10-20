@@ -40,7 +40,7 @@ class Character < ApplicationRecord
   end
 
   def character_sheet
-    """#{actor.name} created a new character, #{name}, with the following stats:
+    """#{name}, created by #{actor.name}, with the following stats:
     Strength: #{attribute_call("strength", stats)}
     Dexterity: #{attribute_call("dexterity", stats)}
     Constitution: #{attribute_call("constitution", stats)}

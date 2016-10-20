@@ -19,6 +19,13 @@ class CharactersController < ApplicationController
     end
   end
 
+  def display_character_sheet
+    actor = Actor.find_by(name: actor_name = params[:user_name])
+    render json: { response_type: "in_channel",
+                   text: actor.character.character_sheet
+                 }
+  end
+
   private
   def error_message(obj)
     "#{obj.errors.first[0].capitalize} #{obj.errors.first[1]}."
