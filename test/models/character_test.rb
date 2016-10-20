@@ -51,7 +51,8 @@ class CharacterTest < ActiveSupport::TestCase
   end
 
   test "new_character_message method" do
-    assert_equal("""#{@thum.actor.name} birthed a new character, #{@thum.name}, with the following stats:
+
+    assert_equal("""#{@thum.name}, created by #{@thum.actor.name}, with the following stats:
     Strength: #{@thum.attribute_call("strength", @thum.stats)}
     Dexterity: #{@thum.attribute_call("dexterity", @thum.stats)}
     Constitution: #{@thum.attribute_call("constitution", @thum.stats)}
@@ -59,7 +60,7 @@ class CharacterTest < ActiveSupport::TestCase
     Wisdom: #{@thum.attribute_call("wisdom", @thum.stats)}
     Charisma: #{@thum.attribute_call("charisma", @thum.stats)}
     Weapon Modifier(s): #{@thum.attribute_call("weapon", @thum.modifiers)}
-    Armor Modifier(s): #{@thum.attribute_call("armor", @thum.modifiers)}""", @thum.new_char_message)
+    Armor Modifier(s): #{@thum.attribute_call("armor", @thum.modifiers)}""", @thum.character_sheet)
   end
 
 end
