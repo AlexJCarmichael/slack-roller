@@ -18,11 +18,11 @@ class ActorController < ApplicationController
     actor =  Actor.find_by(name: actor_params[:user_name])
     character = actor.characters.find_by(name: actor_params[:text])
     if character
-      actor.actor_character.destroy
-      CharacterActor.create(actor: actor, character: character)
+      actor.actor_character.destroy if actor.actor_character
+      ActorCharacter.create(actor: actor, character: character)
       render json: {
         response_type: "in_channel",
-        text: character.character_sheet
+        text: "#{actor.name} is now using #{character.name}" #character.character_sheet
       }
     else
       render json: {

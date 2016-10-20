@@ -8,7 +8,7 @@ class CharactersController < ApplicationController
     char.new_char(actor_name, message_text)
     if char.save
       char.roll_character(message_text)
-      ActorCharacter.create(character: char, actor: actor)
+      ActorCharacter.create!(character: char, actor: actor)
       render json: { response_type: "in_channel",
                      text: char.character_sheet
                    }
@@ -20,9 +20,16 @@ class CharactersController < ApplicationController
   end
 
   def display_character_sheet
-    actor = Actor.find_by(name: actor_name = params[:user_name])
+    actor = Actor.find_by(name: params[:user_name])
     render json: { response_type: "in_channel",
                    text: actor.character.character_sheet
+                 }
+  end
+
+  def view_characters
+    actor = Actor.find_by(name: params[:user_name])
+    render json: { response_type: "in_channel",
+                   text: "#{actor.name}'s characters are:\n#{actor.characters.map { |character| character.name }.join("\n")}"
                  }
   end
 
