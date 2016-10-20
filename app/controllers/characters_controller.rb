@@ -28,6 +28,7 @@ class CharactersController < ApplicationController
 
   def view_characters
     actor = Actor.find_by(name: params[:user_name])
+    actor = Actor.find_by(name: params[:text]) if Actor.find_by(name: params[:text])
     render json: { response_type: "in_channel",
                    text: "#{actor.name}'s characters are:\n#{actor.characters.map { |character| character.name }.join("\n")}"
                  }
