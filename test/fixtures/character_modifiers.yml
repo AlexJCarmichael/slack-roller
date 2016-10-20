@@ -1,0 +1,19 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+weapon_mod_thum:
+  character: thum
+  modifier: weapon_thum
+
+armor_mod_thum:
+  character: thum
+  modifier: armor_thum
+
+#########################
+
+weapon_mod_danekin:
+  character: danekin
+  modifier: weapon_danekin
+
+armor_mod_danekin:
+  character: danekin
+  modifier: armor_danekin

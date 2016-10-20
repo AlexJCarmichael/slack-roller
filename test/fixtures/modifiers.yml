@@ -1,7 +1,19 @@
 # Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
 
-one:
-  character: one
+weapon_thum:
+  name: weapon
+  value: 2
 
-two:
-  character: two
+armor_thum:
+  name: armor
+  value: 1
+
+#########################
+
+weapon_danekin:
+  name: weapon
+  value: 25
+
+armor_danekin:
+  name: armor
+  value: 999
