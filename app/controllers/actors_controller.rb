@@ -15,21 +15,19 @@ class ActorsController < ApplicationController
   end
 
   def register_character
-    actor =  Actor.find_by(name: actor_params[:user_name])
-    character = actor.characters.find_by(name: actor_params[:text])
-    if character
-      actor.actor_character.destroy if actor.actor_character
-      ActorCharacter.create(actor: actor, character: character)
-      render json: {
-        response_type: "in_channel",
-        text: "#{actor.name} is now using #{character.name}"
-      }
-    else
-      render json: {
-        response_type: "in_channel",
-        text: "#{actor_params[:text]} is not a character for #{actor.name}."
-      }
+    response = "You are not registered. To register, type `/register`"
+    if actor = Actor.find_by(name: actor_params[:user_name])
+      response = "#{actor_params[:text]} is not a character for #{actor.name}."
+      if character = actor.characters.find_by(name: actor_params[:text])
+        actor.actor_character.destroy if actor.actor_character
+        ActorCharacter.create(actor: actor, character: character)
+        response = "#{actor.name} is now using #{character.name}"
+      end
     end
+    render json: {
+      response_type: "in_channel",
+      text: response
+    }
   end
 
   private
