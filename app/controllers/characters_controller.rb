@@ -21,8 +21,10 @@ class CharactersController < ApplicationController
 
   def display_character_sheet
     actor = Actor.find_by(name: params[:user_name])
+    character = Character.find_by(name: params[:text]) if Character.find_by(name: params[:text])
+    output = character || actor.character
     render json: { response_type: "in_channel",
-                   text: actor.character.character_sheet
+                   text: output.character_sheet
                  }
   end
 
@@ -30,7 +32,7 @@ class CharactersController < ApplicationController
     actor = Actor.find_by(name: params[:user_name])
     actor = Actor.find_by(name: params[:text]) if Actor.find_by(name: params[:text])
     render json: { response_type: "in_channel",
-                   text: "#{actor.name}'s characters are:\n#{actor.characters.map { |character| character.name }.join("\n")}"
+                   text: actor.character_list
                  }
   end
 
