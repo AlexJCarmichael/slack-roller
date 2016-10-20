@@ -8,6 +8,10 @@ thum:
   name: Thūm
   actor: mattrice
 
+crank:
+  name: Crank
+  actor: mattrice
+
 danekin:
   name: Danekin Skydangler
   actor: dane
