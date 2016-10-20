@@ -8,7 +8,7 @@ class CharactersController < ApplicationController
     char.new_char(actor_name, message_text)
     if char.save
       char.roll_character(message_text)
-      ActorCharacter.create(character: char, actor: actor)
+      ActorCharacter.create!(character: char, actor: actor)
       render json: { response_type: "in_channel",
                      text: char.character_sheet
                    }
@@ -20,9 +20,24 @@ class CharactersController < ApplicationController
   end
 
   def display_character_sheet
-    actor = Actor.find_by(name: actor_name = params[:user_name])
+    actor = Actor.find_by(name: params[:user_name])
+    character = Character.find_by(name: params[:text]) if Character.find_by(name: params[:text])
+    bad_input = "Invalid input. Make sure you spelled the character's name correctly."
+    output = actor.character.character_sheet
+    output = character ? character.character_sheet : bad_input if params[:text]
     render json: { response_type: "in_channel",
-                   text: actor.character.character_sheet
+                   text: output
+                 }
+  end
+
+  def view_characters
+    actor = Actor.find_by(name: params[:user_name])
+    other_actor = Actor.find_by(name: params[:text]) if Actor.find_by(name: params[:text])
+    bad_input = "Invalid input. Make sure you spelled the user's name correctly."
+    output = actor.character_list
+    output = other_actor ? other_actor.character_list : bad_input if params[:text]
+    render json: { response_type: "in_channel",
+                   text: output
                  }
   end
 

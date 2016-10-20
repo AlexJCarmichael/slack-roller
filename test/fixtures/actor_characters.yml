@@ -1,9 +1,9 @@
 # Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
 
-one:
-  character: one
-  actor: one
+char_actor_mattrice:
+  character: thum
+  actor: mattrice
 
-two:
-  character: two
-  actor: two
+char_actor_dane:
+  character: danekin
+  actor: dane
