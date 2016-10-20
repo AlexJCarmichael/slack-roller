@@ -24,7 +24,7 @@ class CharactersController < ApplicationController
     character = Character.find_by(name: params[:text]) if Character.find_by(name: params[:text])
     bad_input = "Invalid input. Make sure you spelled the character's name correctly."
     output = actor.character.character_sheet
-    output = character ? character.character_sheet : bad_input if params[:text]
+    output = character ? character.character_sheet : bad_input unless (params[:text] == "")
     render json: { response_type: "in_channel",
                    text: output
                  }
@@ -35,7 +35,7 @@ class CharactersController < ApplicationController
     other_actor = Actor.find_by(name: params[:text]) if Actor.find_by(name: params[:text])
     bad_input = "Invalid input. Make sure you spelled the user's name correctly."
     output = actor.character_list
-    output = other_actor ? other_actor.character_list : bad_input if params[:text]
+    output = other_actor ? other_actor.character_list : bad_input unless (params[:text] == "")
     render json: { response_type: "in_channel",
                    text: output
                  }

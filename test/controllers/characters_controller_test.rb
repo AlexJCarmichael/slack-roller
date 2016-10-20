@@ -31,7 +31,7 @@ class CharactersControllerTest < ActionDispatch::IntegrationTest
   end
 
   test "display character sheet without text" do
-    post character_path, params: { user_name: "mattrice" }
+    post character_path, params: { user_name: "mattrice", text: "" }
     assert_response :success
     assert_equal ({"response_type"=>"in_channel", "text"=>"Thūm, created by mattrice, with the following stats:
     Strength: 16
@@ -65,7 +65,7 @@ class CharactersControllerTest < ActionDispatch::IntegrationTest
   end
 
   test "display actor's characters without text" do
-    post characters_path, params: { user_name: "mattrice" }
+    post characters_path, params: { user_name: "mattrice", text: "" }
     assert_response :success
     assert_equal ({"response_type"=>"in_channel", "text"=>"mattrice's characters are:\nThūm\nCrank"}), JSON.parse(@response.body)
   end
