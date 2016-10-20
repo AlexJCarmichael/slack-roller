@@ -5,6 +5,6 @@ Rails.application.routes.draw do
   post "characters", to: 'characters#view_characters',         as: "characters"
   post "new_char",   to: 'characters#new_character',           as: "new_char"
 
-  post "register",           to: 'actor#register',           as: "register"
-  post "register_character", to: 'actor#register_character', as: "register_character"
+  post "register",           to: 'actors#register',           as: "register"
+  post "register_character", to: 'actors#register_character', as: "register_character"
 end

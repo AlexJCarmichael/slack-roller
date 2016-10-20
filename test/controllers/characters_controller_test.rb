@@ -67,7 +67,7 @@ class CharactersControllerTest < ActionDispatch::IntegrationTest
   test "display actor's characters without text" do
     post characters_path, params: { user_name: "mattrice" }
     assert_response :success
-    assert_equal ({"response_type"=>"in_channel", "text"=>"mattrice's characters are:\nThūm"}), JSON.parse(@response.body)
+    assert_equal ({"response_type"=>"in_channel", "text"=>"mattrice's characters are:\nThūm\nCrank"}), JSON.parse(@response.body)
   end
 
   test "display actor's characters with text" do

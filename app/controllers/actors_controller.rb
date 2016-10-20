@@ -1,4 +1,4 @@
-class ActorController < ApplicationController
+class ActorsController < ApplicationController
   def register
     actor = Actor.new(name: actor_params[:user_name])
     if actor.save
