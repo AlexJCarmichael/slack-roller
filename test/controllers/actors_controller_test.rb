@@ -21,7 +21,7 @@ class ActorsControllerTest < ActionDispatch::IntegrationTest
   test "should register a character to an existing actor" do
     post register_character_path, params: { user_name: "mattrice", text: "Thūm" }
     assert_response :success
-    assert_equal ({"response_type"=>"in_channel", "text"=>"mattrice is now using Thūm"}), JSON.parse(@response.body)
+    assert_equal ({"response_type"=>"in_channel", "text"=>"mattrice is now using Thūm."}), JSON.parse(@response.body)
   end
 
   test "should not register a non-existing character to an existing actor" do
@@ -33,6 +33,15 @@ class ActorsControllerTest < ActionDispatch::IntegrationTest
   test "should not register a character to a non-existing actor" do
     post register_character_path, params: { user_name: "Justin", text: "Thūm" }
     assert_response :success
-    assert_equal ({"response_type"=>"in_channel", "text"=>"You are not registered. To register, type `/register`"}), JSON.parse(@response.body)
+    assert_equal ({"response_type"=>"in_channel", "text"=>"You are not registered. To register, type `/register`."}), JSON.parse(@response.body)
+  end
+
+  test "should delete an ActorCharacter when it creates a new one" do
+    assert_no_difference("ActorCharacter.count") do
+      post("/register_character", params: { user_name: "mattrice", text: "Crank" })
+    end
+    response = JSON.parse(@response.body)
+    assert_equal "mattrice is now using Crank.",
+                  response["text"]
   end
 end
