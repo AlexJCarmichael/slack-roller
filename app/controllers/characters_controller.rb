@@ -22,17 +22,22 @@ class CharactersController < ApplicationController
   def display_character_sheet
     actor = Actor.find_by(name: params[:user_name])
     character = Character.find_by(name: params[:text]) if Character.find_by(name: params[:text])
-    output = character || actor.character
+    bad_input = "Invalid input. Make sure you spelled the character's name correctly."
+    output = actor.character.character_sheet
+    output = character ? character.character_sheet : bad_input if params[:text]
     render json: { response_type: "in_channel",
-                   text: output.character_sheet
+                   text: output
                  }
   end
 
   def view_characters
     actor = Actor.find_by(name: params[:user_name])
-    actor = Actor.find_by(name: params[:text]) if Actor.find_by(name: params[:text])
+    other_actor = Actor.find_by(name: params[:text]) if Actor.find_by(name: params[:text])
+    bad_input = "Invalid input. Make sure you spelled the user's name correctly."
+    output = actor.character_list
+    output = other_actor ? other_actor.character_list : bad_input if params[:text]
     render json: { response_type: "in_channel",
-                   text: actor.character_list
+                   text: output
                  }
   end
 

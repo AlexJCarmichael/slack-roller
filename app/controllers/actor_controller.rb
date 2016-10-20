@@ -22,7 +22,7 @@ class ActorController < ApplicationController
       ActorCharacter.create(actor: actor, character: character)
       render json: {
         response_type: "in_channel",
-        text: "#{actor.name} is now using #{character.name}" #character.character_sheet
+        text: "#{actor.name} is now using #{character.name}"
       }
     else
       render json: {
