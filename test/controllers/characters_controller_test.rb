@@ -30,4 +30,55 @@ class CharactersControllerTest < ActionDispatch::IntegrationTest
     Armor Modifier(s): 1"}), JSON.parse(@response.body)
   end
 
+  test "display character sheet without text" do
+    post character_path, params: { user_name: "mattrice" }
+    assert_response :success
+    assert_equal ({"response_type"=>"in_channel", "text"=>"Thūm, created by mattrice, with the following stats:
+    Strength: 16
+    Dexterity: 15
+    Constitution: 14
+    Intelligence: 13
+    Wisdom: 12
+    Charisma: 11
+    Weapon Modifier(s): 2
+    Armor Modifier(s): 1"}), JSON.parse(@response.body)
+  end
+
+  test "display character sheet with text" do
+    post character_path, params: { user_name: "mattrice", text: "Thūm" }
+    assert_response :success
+    assert_equal ({"response_type"=>"in_channel", "text"=>"Thūm, created by mattrice, with the following stats:
+    Strength: 16
+    Dexterity: 15
+    Constitution: 14
+    Intelligence: 13
+    Wisdom: 12
+    Charisma: 11
+    Weapon Modifier(s): 2
+    Armor Modifier(s): 1"}), JSON.parse(@response.body)
+  end
+
+  test "display character sheet with invalid text" do
+    post character_path, params: { user_name: "mattrice", text: "Banana" }
+    assert_response :success
+    assert_equal ({"response_type"=>"in_channel", "text"=>"Invalid input. Make sure you spelled the character's name correctly."}), JSON.parse(@response.body)
+  end
+
+  test "display actor's characters without text" do
+    post characters_path, params: { user_name: "mattrice" }
+    assert_response :success
+    assert_equal ({"response_type"=>"in_channel", "text"=>"mattrice's characters are:\nThūm"}), JSON.parse(@response.body)
+  end
+
+  test "display actor's characters with text" do
+    post characters_path, params: { user_name: "mattrice", text: "dane" }
+    assert_response :success
+    assert_equal ({"response_type"=>"in_channel", "text"=>"dane's characters are:\nDanekin Skydangler"}), JSON.parse(@response.body)
+  end
+
+  test "display actor's characters with invalid text" do
+    post characters_path, params: { user_name: "mattrice", text: "Banana" }
+    assert_response :success
+    assert_equal ({"response_type"=>"in_channel", "text"=>"Invalid input. Make sure you spelled the user's name correctly."}), JSON.parse(@response.body)
+  end
 end
