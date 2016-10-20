@@ -44,4 +44,10 @@ class ActorsControllerTest < ActionDispatch::IntegrationTest
     assert_equal "mattrice is now using Crank.",
                   response["text"]
   end
+
+  test "should display a list of all actors" do
+    post roster_path
+    assert_response :success
+    assert_equal ({"response_type"=>"in_channel", "text"=>"mattrice\ndane"}), JSON.parse(@response.body)
+  end
 end

@@ -10,4 +10,5 @@ class Actor < ApplicationRecord
     return "#{name}'s characters are:\n#{characters.map { |character| character.name }.join("\n")}" if characters.present?
     "#{name} has no characters registered yet."
   end
+
 end

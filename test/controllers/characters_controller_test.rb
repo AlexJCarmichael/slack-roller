@@ -81,4 +81,10 @@ class CharactersControllerTest < ActionDispatch::IntegrationTest
     assert_response :success
     assert_equal ({"response_type"=>"in_channel", "text"=>"Invalid input. Make sure you spelled the user's name correctly."}), JSON.parse(@response.body)
   end
+
+  test "should display a list of all characters" do
+    post character_roster_path
+    assert_response :success
+    assert_equal ({"response_type"=>"in_channel", "text"=>"Thūm\nCrank\nDanekin Skydangler"}), JSON.parse(@response.body)
+  end
 end
