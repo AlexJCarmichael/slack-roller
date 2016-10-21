@@ -13,7 +13,7 @@ class Stat < ApplicationRecord
     STATS_ARR.each do |s|
       name = s
       value = parser[s] || 0
-      value = "0" if (value.to_i >= 19 || value.to_i < 0)
+      value = "0" if (value.to_i >= 19 || value.to_i <= 0)
       stat = Stat.create(name: name,
                          value: value)
 

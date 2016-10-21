@@ -11,6 +11,8 @@ class Modifier < ApplicationRecord
     MODIFIER_ARR.each do |s|
       name = s
       value = parser[s] || 0
+      value = "0" if (value.to_i == 0)
+
       mod = Modifier.create(name: name,
                             value: value)
 
