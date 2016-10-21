@@ -10,7 +10,7 @@ class CharactersController < ApplicationController
       char.roll_character(message_text)
       ActorCharacter.create!(character: char, actor: actor)
       render json: { response_type: "in_channel",
-                     text: char.character_sheet
+                     text: char.new_character_message
                    }
     else
       render json: { response_type: "in_channel",
@@ -26,7 +26,7 @@ class CharactersController < ApplicationController
     char = actor.character
     char.edit_char(actor_name, message_text)
     render json: { response_type: "in_channel",
-                   text: char.character_sheet
+                   text: char.edit_character_message
                  }
   end
 

@@ -53,9 +53,18 @@ class Character < ApplicationRecord
     Actor.find_by(name: actor)
   end
 
+  def new_character_message
+    """#{name} has just been created by #{actor.name}! #{name} has the following stats:\n#{character_sheet}"""
+  end
+
+  def edit_character_message
+    """#{actor.name} has updated his character:
+    Name: #{name}\n#{character_sheet}"""
+
+  end
+
   def character_sheet
-    """#{name}, created by #{actor.name}, with the following stats:
-    Strength: #{attribute_call("strength", stats)}
+    """    Strength: #{attribute_call("strength", stats)}
     Dexterity: #{attribute_call("dexterity", stats)}
     Constitution: #{attribute_call("constitution", stats)}
     Intelligence: #{attribute_call("intelligence", stats)}

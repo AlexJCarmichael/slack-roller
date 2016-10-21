@@ -5,7 +5,7 @@ class CharactersControllerTest < ActionDispatch::IntegrationTest
   test "create a simple character" do
     post new_char_path, params: { user_name: "mattrice", text: "name: SimpleChar, strength: 10" }
     assert_response :success
-    assert_equal ({"response_type"=>"in_channel", "text"=>"SimpleChar, created by mattrice, with the following stats:
+    assert_equal ({"response_type"=>"in_channel", "text"=>"SimpleChar has just been created by mattrice! SimpleChar has the following stats:
     Strength: 10
     Dexterity: 0
     Constitution: 0
@@ -19,7 +19,7 @@ class CharactersControllerTest < ActionDispatch::IntegrationTest
   test "create a full character" do
     post new_char_path, params: { user_name: "mattrice", text: "name: ComplexChar, strength: 16, dexterity: 15, constitution: 14, intelligence: 13, wisdom: 12, charisma: 11, weapon: 2, armor: 1" }
     assert_response :success
-    assert_equal ({"response_type"=>"in_channel", "text"=>"ComplexChar, created by mattrice, with the following stats:
+    assert_equal ({"response_type"=>"in_channel", "text"=>"ComplexChar has just been created by mattrice! ComplexChar has the following stats:
     Strength: 16
     Dexterity: 15
     Constitution: 14
@@ -28,6 +28,20 @@ class CharactersControllerTest < ActionDispatch::IntegrationTest
     Charisma: 11
     Weapon Modifier(s): 2
     Armor Modifier(s): 1"}), JSON.parse(@response.body)
+  end
+
+  test "edit a full character" do
+    put edit_char_path, params: { user_name: "mattrice", text: "name: Jimbo, strength: 5, dexterity: 6, constitution: 7, intelligence: 8, wisdom: 9, charisma: 10, weapon: 11, armor: 12" }
+    assert_response :success
+    assert_equal ({"response_type"=>"in_channel", "text"=>"Jimbo has just been created by mattrice! Jimbo has the following stats:
+    Strength: 5
+    Dexterity: 6
+    Constitution: 7
+    Intelligence: 8
+    Wisdom: 9
+    Charisma: 10
+    Weapon Modifier(s): 11
+    Armor Modifier(s): 12"}), JSON.parse(@response.body)
   end
 
   test "display character sheet without text" do
