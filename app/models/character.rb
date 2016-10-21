@@ -58,13 +58,13 @@ class Character < ApplicationRecord
   end
 
   def edit_character_message
-    """#{actor.name} has updated his character:
-    Name: #{name}\n#{character_sheet}"""
+    """#{actor.name} has updated his character:\n#{character_sheet}"""
 
   end
 
   def character_sheet
-    """    Strength: #{attribute_call("strength", stats)}
+    """    Name: #{name}
+    Strength: #{attribute_call("strength", stats)}
     Dexterity: #{attribute_call("dexterity", stats)}
     Constitution: #{attribute_call("constitution", stats)}
     Intelligence: #{attribute_call("intelligence", stats)}
