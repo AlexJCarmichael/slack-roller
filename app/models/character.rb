@@ -62,7 +62,7 @@ class Character < ApplicationRecord
   end
 
   def character_sheet
-    """    Name: #{name}
+    """    Name: #{actor.character.name}
     Strength: #{attribute_call("strength", stats)}
     Dexterity: #{attribute_call("dexterity", stats)}
     Constitution: #{attribute_call("constitution", stats)}

@@ -17,6 +17,21 @@ class CharactersControllerTest < ActionDispatch::IntegrationTest
     Armor Modifier(s): 0"}), JSON.parse(@response.body)
   end
 
+  test "create a simple character with invalid stats" do
+    post new_char_path, params: { user_name: "mattrice", text: "name: SimpleChar, strength: a, charisma: -1, dexterity: 45" }
+    assert_response :success
+    assert_equal ({"response_type"=>"in_channel", "text"=>"SimpleChar has just been created by mattrice! SimpleChar has the following stats:
+    Name: SimpleChar
+    Strength: 0
+    Dexterity: 0
+    Constitution: 0
+    Intelligence: 0
+    Wisdom: 0
+    Charisma: 0
+    Weapon Modifier(s): 0
+    Armor Modifier(s): 0"}), JSON.parse(@response.body)
+  end
+
   test "create a full character" do
     post new_char_path, params: { user_name: "mattrice", text: "name: ComplexChar, strength: 16, dexterity: 15, constitution: 14, intelligence: 13, wisdom: 12, charisma: 11, weapon: 2, armor: 1" }
     assert_response :success
@@ -38,6 +53,21 @@ class CharactersControllerTest < ActionDispatch::IntegrationTest
     assert_equal ({"response_type"=>"in_channel", "text"=>"mattrice has updated his character:
     Name: Jimbo
     Strength: 5
+    Dexterity: 6
+    Constitution: 7
+    Intelligence: 8
+    Wisdom: 9
+    Charisma: 10
+    Weapon Modifier(s): 11
+    Armor Modifier(s): 12"}), JSON.parse(@response.body)
+  end
+
+  test "should not edit a character with an already-used name" do
+    post edit_char_path, params: { user_name: "mattrice", text: "name: Danekin-Skydangler, strength: 6" }
+    assert_response :success
+    assert_equal ({"response_type"=>"in_channel", "text"=>"Name has already been taken.
+    Name: Thūm
+    Strength: 6
     Dexterity: 6
     Constitution: 7
     Intelligence: 8
@@ -90,7 +120,7 @@ class CharactersControllerTest < ActionDispatch::IntegrationTest
   test "display actor's characters with text" do
     post characters_path, params: { user_name: "mattrice", text: "dane" }
     assert_response :success
-    assert_equal ({"response_type"=>"in_channel", "text"=>"dane's characters are:\n\tDanekin Skydangler"}), JSON.parse(@response.body)
+    assert_equal ({"response_type"=>"in_channel", "text"=>"dane's characters are:\n\tDanekin-Skydangler"}), JSON.parse(@response.body)
   end
 
   test "display actor's characters with invalid text" do
@@ -102,6 +132,6 @@ class CharactersControllerTest < ActionDispatch::IntegrationTest
   test "should display a list of all characters" do
     post character_roster_path
     assert_response :success
-    assert_equal ({"response_type"=>"in_channel", "text"=>"Thūm\nCrank\nDanekin Skydangler"}), JSON.parse(@response.body)
+    assert_equal ({"response_type"=>"in_channel", "text"=>"Thūm\nCrank\nDanekin-Skydangler"}), JSON.parse(@response.body)
   end
 end

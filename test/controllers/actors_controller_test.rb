@@ -24,6 +24,12 @@ class ActorsControllerTest < ActionDispatch::IntegrationTest
     assert_equal ({"response_type"=>"in_channel", "text"=>"mattrice is now using Thūm."}), JSON.parse(@response.body)
   end
 
+  test "should register a different character to an existing actor" do
+    post register_character_path, params: { user_name: "mattrice", text: "Crank" }
+    assert_response :success
+    assert_equal ({"response_type"=>"in_channel", "text"=>"mattrice is now using Crank."}), JSON.parse(@response.body)
+  end
+
   test "should not register a non-existing character to an existing actor" do
     post register_character_path, params: { user_name: "mattrice", text: "Gerald" }
     assert_response :success

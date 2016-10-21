@@ -11,12 +11,12 @@ class CharacterTest < ActiveSupport::TestCase
 
   test "character exists" do
     assert_equal("Thūm", Character.find_by(name: "Thūm").name)
-    assert_equal("Danekin Skydangler", Character.find_by(name: "Danekin Skydangler").name)
+    assert_equal("Danekin-Skydangler", Character.find_by(name: "Danekin-Skydangler").name)
   end
 
   test "find character through actor" do
     assert_equal("Thūm", Actor.find_by(name: "mattrice").characters.first.name)
-    assert_equal("Danekin Skydangler", Actor.find_by(name: "dane").characters.first.name)
+    assert_equal("Danekin-Skydangler", Actor.find_by(name: "dane").characters.first.name)
   end
 
   test "create new character" do

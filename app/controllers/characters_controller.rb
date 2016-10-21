@@ -31,7 +31,7 @@ class CharactersController < ApplicationController
                    }
     else
       render json: { response_type: "in_channel",
-                     text: error_message(char)
+                     text: "#{error_message(char)}\n#{char.character_sheet}"
                    }
     end
   end

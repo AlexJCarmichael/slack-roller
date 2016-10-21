@@ -5,7 +5,7 @@ class ModifierTest < ActiveSupport::TestCase
     @mattrice = Actor.find_by(name: "mattrice")
     @dane =     Actor.find_by(name: "dane")
     @thum =     Character.find_by(name: "Thūm")
-    @danekin =  Character.find_by(name: "Danekin Skydangler")
+    @danekin =  Character.find_by(name: "Danekin-Skydangler")
   end
 
   test "modifier exists" do
