@@ -10,11 +10,28 @@ class CharactersController < ApplicationController
       char.roll_character(message_text)
       ActorCharacter.create!(character: char, actor: actor)
       render json: { response_type: "in_channel",
-                     text: char.character_sheet
+                     text: char.new_character_message
                    }
     else
       render json: { response_type: "in_channel",
                      text: error_message(char)
+                   }
+    end
+  end
+
+  def edit_character
+    actor_name = params[:user_name]
+    actor = Actor.find_by(name: actor_name)
+    message_text = params[:text]
+    char = actor.character
+    char.edit_char(actor_name, message_text)
+    if char.save
+      render json: { response_type: "in_channel",
+                     text: char.edit_character_message
+                   }
+    else
+      render json: { response_type: "in_channel",
+                     text: "#{error_message(char)}\n#{char.character_sheet}"
                    }
     end
   end
@@ -38,6 +55,13 @@ class CharactersController < ApplicationController
     output = other_actor ? other_actor.character_list : bad_input unless (params[:text] == "")
     render json: { response_type: "in_channel",
                    text: output
+                 }
+  end
+
+  def character_roster
+    output = Character.all.map { |char| "#{char.name}" }
+    render json: { response_type: "in_channel",
+                   text: output.join("\n")
                  }
   end
 

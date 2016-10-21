@@ -30,6 +30,14 @@ class ActorsController < ApplicationController
     }
   end
 
+  def roster
+    response = Actor.all.map { |actor| "#{actor.name}" }
+    render json: {
+      response_type: "in_channel",
+      text: response.join("\n")
+    }
+  end
+
   private
 
   def actor_params

@@ -7,7 +7,8 @@ class Actor < ApplicationRecord
   validates :name, presence: true, uniqueness: true
 
   def character_list
-    return "#{name}'s characters are:\n#{characters.map { |character| character.name }.join("\n")}" if characters.present?
+    return "#{name}'s characters are:\n\t#{characters.map { |character| character.name }.join("\n\t")}" if characters.present?
     "#{name} has no characters registered yet."
   end
+
 end

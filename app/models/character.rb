@@ -11,11 +11,25 @@ class Character < ApplicationRecord
 
   validates :name, presence: true, uniqueness: true
 
+  STATS_ARR = %w(strength dexterity constitution intelligence wisdom charisma)
+  MODIFIER_ARR = %w(weapon armor)
+
   def new_char(actor_name, message)
     parsed_character = parse_message(message)
 
     self.actor = find_actor_id(actor_name)
     self.name = parsed_character["name"]
+  end
+
+  def edit_char(actor_name, message)
+    parsed_character = parse_message(message)
+    self.name = parsed_character["name"] if parsed_character["name"]
+    STATS_ARR.each do |stat|
+      self.stats.find_by(name: stat).update(value: parsed_character[stat]) if parsed_character[stat]
+    end
+    MODIFIER_ARR.each do |mod|
+      self.modifiers.find_by(name: mod).update(value: parsed_character[mod]) if parsed_character[mod]
+    end
   end
 
   def roll_character(message)
@@ -39,8 +53,16 @@ class Character < ApplicationRecord
     Actor.find_by(name: actor)
   end
 
+  def new_character_message
+    """#{name} has just been created by #{actor.name}! #{name} has the following stats:\n#{character_sheet}"""
+  end
+
+  def edit_character_message
+    """#{actor.name} has updated his character:\n#{character_sheet}"""
+  end
+
   def character_sheet
-    """#{name}, created by #{actor.name}, with the following stats:
+    """    Name: #{actor.character.name}
     Strength: #{attribute_call("strength", stats)}
     Dexterity: #{attribute_call("dexterity", stats)}
     Constitution: #{attribute_call("constitution", stats)}
