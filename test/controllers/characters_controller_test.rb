@@ -33,7 +33,7 @@ class CharactersControllerTest < ActionDispatch::IntegrationTest
   end
 
   test "edit a full character" do
-    put edit_char_path, params: { user_name: "mattrice", text: "name: Jimbo, strength: 5, dexterity: 6, constitution: 7, intelligence: 8, wisdom: 9, charisma: 10, weapon: 11, armor: 12" }
+    post edit_char_path, params: { user_name: "mattrice", text: "name: Jimbo, strength: 5, dexterity: 6, constitution: 7, intelligence: 8, wisdom: 9, charisma: 10, weapon: 11, armor: 12" }
     assert_response :success
     assert_equal ({"response_type"=>"in_channel", "text"=>"mattrice has updated his character:
     Name: Jimbo

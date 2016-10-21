@@ -23,7 +23,7 @@ class Character < ApplicationRecord
 
   def edit_char(actor_name, message)
     parsed_character = parse_message(message)
-    self.update(name: parsed_character["name"]) if parsed_character["name"]
+    self.name = parsed_character["name"] if parsed_character["name"]
     STATS_ARR.each do |stat|
       self.stats.find_by(name: stat).update(value: parsed_character[stat]) if parsed_character[stat]
     end
@@ -59,7 +59,6 @@ class Character < ApplicationRecord
 
   def edit_character_message
     """#{actor.name} has updated his character:\n#{character_sheet}"""
-
   end
 
   def character_sheet

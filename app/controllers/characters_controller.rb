@@ -25,9 +25,15 @@ class CharactersController < ApplicationController
     message_text = params[:text]
     char = actor.character
     char.edit_char(actor_name, message_text)
-    render json: { response_type: "in_channel",
-                   text: char.edit_character_message
-                 }
+    if char.save
+      render json: { response_type: "in_channel",
+                     text: char.edit_character_message
+                   }
+    else
+      render json: { response_type: "in_channel",
+                     text: error_message(char)
+                   }
+    end
   end
 
   def display_character_sheet
