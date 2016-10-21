@@ -19,6 +19,17 @@ class CharactersController < ApplicationController
     end
   end
 
+  def edit_character
+    actor_name = params[:user_name]
+    actor = Actor.find_by(name: actor_name)
+    message_text = params[:text]
+    char = actor.character
+    char.edit_char(actor_name, message_text)
+    render json: { response_type: "in_channel",
+                   text: char.character_sheet
+                 }
+  end
+
   def display_character_sheet
     actor = Actor.find_by(name: params[:user_name])
     character = Character.find_by(name: params[:text]) if Character.find_by(name: params[:text])
