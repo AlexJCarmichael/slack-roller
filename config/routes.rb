@@ -1,4 +1,6 @@
 Rails.application.routes.draw do
+  get "help", to: 'message#help', as: "help"
+
   post "roll", to: 'message#roll', as: "roll"
 
   post "character",  to: 'characters#display_character_sheet', as: "character"
@@ -11,4 +13,5 @@ Rails.application.routes.draw do
   post "register",           to: 'actors#register',           as: "register"
   post "register_character", to: 'actors#register_character', as: "register_character"
   post "roster",             to: 'actors#roster',             as: "roster"
+
 end

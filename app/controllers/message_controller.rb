@@ -9,6 +9,13 @@ class MessageController < ApplicationController
     }
   end
 
+  def help
+    render json: {
+      response_type: "in_channel",
+      text: help_message
+    }
+  end
+
   private
 
   def message_params

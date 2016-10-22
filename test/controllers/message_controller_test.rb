@@ -1,6 +1,11 @@
-class ApplicationController < ActionController::API
-  def help_message
-    """The following options are...
+require 'test_helper'
+
+class MessageControllerTest < ActionDispatch::IntegrationTest
+
+  test "create a simple character" do
+    get help_path
+    assert_response :success
+    assert_equal ({"response_type"=>"in_channel", "text"=>"The following options are...
       /roll
       /register
       /new_char <input character name, stats, and modifiers>
@@ -11,6 +16,6 @@ class ApplicationController < ActionController::API
       /characters
       /characters <user_name>
       /roster
-      /character_roster\n"""
+      /character_roster\n"}), JSON.parse(@response.body)
   end
 end
