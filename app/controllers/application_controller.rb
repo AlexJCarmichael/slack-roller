@@ -6,9 +6,7 @@ class ApplicationController < ActionController::API
       /new_char <input character name, stats, and modifiers>
       /edit_char <input character name, stats, or modifiers>
       /register_character <character_name>
-      /character
       /character <character_name>
-      /characters
       /characters <user_name>
       /roster
       /character_roster\n"""
