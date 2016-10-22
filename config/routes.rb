@@ -1,5 +1,5 @@
 Rails.application.routes.draw do
-  get "help", to: 'message#help', as: "help"
+  get "helpdw", to: 'message#help', as: "helpdw"
 
   post "roll", to: 'message#roll', as: "roll"
 
