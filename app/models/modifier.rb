@@ -1,6 +1,6 @@
 class Modifier < ApplicationRecord
-  has_one :character_modifier
-  has_one :character, through: :character_modifier
+  has_one :character_modifier, dependent: :destroy
+  has_one :character, through: :character_modifier, dependent: :destroy
 
   MODIFIER_ARR = %w(weapon armor)
 

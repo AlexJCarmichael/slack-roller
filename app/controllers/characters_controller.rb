@@ -59,7 +59,7 @@ class CharactersController < ApplicationController
   end
 
   def character_roster
-    output = Character.all.map { |char| "#{char.name}" }
+    output = Character.all.map { |char| "#{char.name} - #{char.actor.name}" }
     render json: { response_type: "in_channel",
                    text: output.join("\n")
                  }

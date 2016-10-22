@@ -1,13 +1,13 @@
 class Character < ApplicationRecord
   belongs_to :actor
 
-  has_one :actor_character
+  has_one :actor_character, dependent: :destroy
 
-  has_many :character_stats
-  has_many :stats, through: :character_stats
+  has_many :character_stats, dependent: :destroy
+  has_many :stats, through: :character_stats, dependent: :destroy
 
-  has_many :character_modifiers
-  has_many :modifiers, through: :character_modifiers
+  has_many :character_modifiers, dependent: :destroy
+  has_many :modifiers, through: :character_modifiers, dependent: :destroy
 
   validates :name, presence: true, uniqueness: true
 

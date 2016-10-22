@@ -68,13 +68,13 @@ class CharactersControllerTest < ActionDispatch::IntegrationTest
     assert_equal ({"response_type"=>"in_channel", "text"=>"Name has already been taken.
     Name: Thūm
     Strength: 6
-    Dexterity: 6
-    Constitution: 7
-    Intelligence: 8
-    Wisdom: 9
-    Charisma: 10
-    Weapon Modifier(s): 11
-    Armor Modifier(s): 12"}), JSON.parse(@response.body)
+    Dexterity: 15
+    Constitution: 14
+    Intelligence: 13
+    Wisdom: 12
+    Charisma: 11
+    Weapon Modifier(s): 2
+    Armor Modifier(s): 1"}), JSON.parse(@response.body)
   end
 
   test "display character sheet without text" do
@@ -132,6 +132,6 @@ class CharactersControllerTest < ActionDispatch::IntegrationTest
   test "should display a list of all characters" do
     post character_roster_path
     assert_response :success
-    assert_equal ({"response_type"=>"in_channel", "text"=>"Thūm\nCrank\nDanekin-Skydangler"}), JSON.parse(@response.body)
+    assert_equal ({"response_type"=>"in_channel", "text"=>"Thūm - mattrice\nCrank - mattrice\nDanekin-Skydangler - dane"}), JSON.parse(@response.body)
   end
 end
