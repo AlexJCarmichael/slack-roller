@@ -17,12 +17,14 @@ class Message < ApplicationRecord
                [:sides_to_die, 'd\d*'],
                [:dropped_die, 'drop'],
                [:attachment, '([-\+\*\\/] ?)\d*'],
-               [:stat_mod, 'str|dex|con|int|wis|cha']
+               [:stat_mod, 'str|dex|con|int|wis|cha'],
+               [:equipment_mod, 'weapon|armor']
              ]
 
   def roll_dice
     roll_params = parse_message
-    stat_mod = mod_rolls(roll_params[:stat_mod]) if roll_params[:stat_mod]
+    stat_mod = stat_rolls(roll_params[:stat_mod]) if roll_params[:stat_mod]
+    stat_mod = equipment_rolls(roll_params[:equipment_mod]) if roll_params[:equipment_mod]
     if self.body[/\d{1,3}d\d{1,3}/]
       roll_params = numberize_die(roll_params)
       rolls = roll(roll_params[:times_rolled],
@@ -56,11 +58,8 @@ class Message < ApplicationRecord
     num_times.times.collect { return_die_result(sides) }
   end
 
-  def mod_rolls(mod)
+  def stat_rolls(mod)
     actor = Actor.find_by(name: self.user_name)
-    puts "!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!"
-    puts mod
-    puts "??????????????????????????????????"
     stat = actor.character.stats.find_by("name ~* ?", "#{mod}")
     case stat.value
     when (1..3)   then return [" ", -3]
@@ -71,6 +70,12 @@ class Message < ApplicationRecord
     when (16..17) then return [" +", 2]
     when (18)     then return [" +", 3]
     end
+  end
+
+  def equipment_rolls(mod)
+    actor = Actor.find_by(name: self.user_name)
+    equipment = actor.character.modifiers.find_by("name ~* ?", "#{mod}")
+    [" +", equipment.value]
   end
 
   def sorted_drop(rolls)
