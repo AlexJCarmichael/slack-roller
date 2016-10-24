@@ -16,12 +16,13 @@ class Message < ApplicationRecord
                [:times_rolled, '\b\d{1,3}'],
                [:sides_to_die, 'd\d*'],
                [:dropped_die, 'drop'],
-               [:attachment, '([-\+\*\\/] ?)\d*']
+               [:attachment, '([-\+\*\\/] ?)\d*'],
+               [:stat_mod, 'str|dex|con|int|wis|cha']
              ]
 
   def roll_dice
+    roll_params = parse_message
     if self.body[/\d{1,3}d\d{1,3}/]
-      roll_params = parse_message
       roll_params = numberize_die(roll_params)
       rolls = roll(roll_params[:times_rolled],
                    roll_params[:sides_to_die])
@@ -34,7 +35,8 @@ class Message < ApplicationRecord
         self.body = build_roll_message(rolls, nil, dropped)
       end
     else
-      self.body = build_roll_message(roll)
+      stat_mod = mod_rolls(roll_params[:stat_mod]) if roll_params[:stat_mod]
+      self.body = build_roll_message(roll, nil, nil, stat_mod)
     end
   end
 
@@ -54,6 +56,23 @@ class Message < ApplicationRecord
     num_times.times.collect { return_die_result(sides) }
   end
 
+  def mod_rolls(mod)
+    actor = Actor.find_by(name: self.user_name)
+    puts "!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!"
+    puts mod
+    puts "??????????????????????????????????"
+    stat = actor.character.stats.find_by("name ~* ?", "#{mod}" )
+    case stat.value
+    when (1..3)   then return -3
+    when (4..5)   then return -2
+    when (6..8)   then return -1
+    when (9..12)  then return 0
+    when (13..15) then return 1
+    when (16..17) then return 2
+    when (18)     then return 3
+    end
+  end
+
   def sorted_drop(rolls)
     rolls.sort!
     if self.body.downcase[/high/]
@@ -64,13 +83,13 @@ class Message < ApplicationRecord
     [rolls, dropped]
   end
 
-  def build_roll_message(rolls, attach = nil, dropped = nil)
-    total = rolls.sum
+  def build_roll_message(rolls, attach = nil, dropped = nil, stat_mod = nil)
+    total = rolls.sum + stat_mod
     if attach
       total = total.public_send(attach.op, attach.mod)
     end
     "#{self.user_name} rolls #{self.body}, resulting in"\
-    " *#{rolls.join(", ")}* for a total of"\
+    " *#{rolls.join(", ")}* #{stat_mod} for a total of"\
     " *#{total}*#{dropped_message(dropped)}"
   end
 
