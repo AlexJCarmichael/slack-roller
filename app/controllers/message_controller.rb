@@ -1,6 +1,6 @@
 class MessageController < ApplicationController
   def roll
-    body = message_params[:text]
+    body = message_params[:text].downcase
     message = Message.new(body: body, user_name: message_params[:user_name])
     message.roll_dice
     render json: {

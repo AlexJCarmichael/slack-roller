@@ -23,8 +23,8 @@ class Message < ApplicationRecord
 
   def roll_dice
     roll_params = parse_message
-    stat_mod = stat_rolls(roll_params[:stat_mod]) if roll_params[:stat_mod]
-    stat_mod = equipment_rolls(roll_params[:equipment_mod]) if roll_params[:equipment_mod]
+    mod = stat_rolls(roll_params[:stat_mod]) if roll_params[:stat_mod]
+    mod = equipment_rolls(roll_params[:equipment_mod]) if roll_params[:equipment_mod]
     if self.body[/\d{1,3}d\d{1,3}/]
       roll_params = numberize_die(roll_params)
       rolls = roll(roll_params[:times_rolled],
@@ -33,12 +33,12 @@ class Message < ApplicationRecord
       if roll_params[:attachment]
         attach = Attachment.new(roll_params[:attachment][0],
                                 roll_params[:attachment][/\d{1,3}/])
-        self.body = build_roll_message(rolls, attach, dropped, stat_mod)
+        self.body = build_roll_message(rolls, attach, dropped, mod)
       else
-        self.body = build_roll_message(rolls, nil, dropped, stat_mod)
+        self.body = build_roll_message(rolls, nil, dropped, mod)
       end
     else
-      self.body = build_roll_message(roll, attach, nil, stat_mod)
+      self.body = build_roll_message(roll, attach, nil, mod)
     end
   end
 
@@ -75,12 +75,15 @@ class Message < ApplicationRecord
   def equipment_rolls(mod)
     actor = Actor.find_by(name: self.user_name)
     equipment = actor.character.modifiers.find_by("name ~* ?", "#{mod}")
-    [" +", equipment.value]
+    case equipment.name
+    when "weapon" then return [" +", equipment.value]
+    when "armor" then return [" ", -equipment.value]
+    end
   end
 
   def sorted_drop(rolls)
     rolls.sort!
-    if self.body.downcase[/high/]
+    if self.body[/high/]
       dropped = rolls.pop
     else
       dropped = rolls.shift
@@ -88,13 +91,13 @@ class Message < ApplicationRecord
     [rolls, dropped]
   end
 
-  def build_roll_message(rolls, attach = nil, dropped = nil, stat_mod = nil)
+  def build_roll_message(rolls, attach = nil, dropped = nil, mod = nil)
     total = rolls.sum
     mods = ""
     total = total.public_send(attach.op, attach.mod) if attach
-    if stat_mod
-      total += stat_mod[1]
-      mods = stat_mod
+    if mod
+      total += mod[1]
+      mods = mod
     end
     "#{self.user_name} rolls #{self.body}, resulting in"\
     " *#{rolls.join(", ")}#{mod_message(mods)}* for a total of"\
