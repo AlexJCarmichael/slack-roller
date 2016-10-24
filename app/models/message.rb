@@ -19,7 +19,7 @@ class Message < ApplicationRecord
                [:attachment, '([-\+\*\\/] ?)\d*'],
                [:stat, 'strength|dexterity|constitution|intelligence|wisdom|charisma'],
                [:stat_mod, 'str|dex|con|int|wis|cha'],
-               [:equipment_mod, 'weapon|armor']
+               [:equipment_mod, 'attack|defend']
              ]
 
   def roll_dice
@@ -82,7 +82,9 @@ class Message < ApplicationRecord
 
   def equipment_rolls(mod)
     actor = Actor.find_by(name: self.user_name)
-    equipment = actor.character.modifiers.find_by("name ~* ?", "#{mod}")
+    word = "weapon" if mod == "attack"
+    word = "armor" if mod == "defend"
+    equipment = actor.character.modifiers.find_by("name ~* ?", "#{word}")
     case equipment.name
     when "weapon" then return [" +", equipment.value]
     when "armor" then return [" ", -equipment.value]
@@ -102,19 +104,25 @@ class Message < ApplicationRecord
   def build_roll_message(rolls, attach = nil, dropped = nil, mod = nil)
     total = rolls.sum
     mods = ""
-    total = total.public_send(attach.op, attach.mod) if attach
+    attaches = ""
+    if attach
+      attaches = [attach.op, attach.mod].join
+      total = total.public_send(attach.op, attach.mod)
+    end
     if mod
       total += mod[1]
       mods = mod
     end
     "#{self.user_name} rolls #{self.body}, resulting in"\
-    " *#{rolls.join(", ")}#{mod_message(mods)}* for a total of"\
+    " *#{rolls.join(", ")}#{mod_message(mods)} #{attaches}* for a total of"\
     " *#{total}*#{dropped_message(dropped)}"
   end
 
   def mod_message(mods = nil)
     "#{mods[0]}#{mods[1]}"
   end
+
+
 
   def dropped_message(dropped = nil)
     " _dropped #{dropped}_" if dropped
