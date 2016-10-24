@@ -80,14 +80,14 @@ class Message < ApplicationRecord
     end
   end
 
-  def equipment_rolls(mod)
+  def equipment_rolls(mod_message)
     actor = Actor.find_by(name: self.user_name)
-    word = "weapon" if mod == "attack"
-    word = "armor" if mod == "defend"
-    equipment = actor.character.modifiers.find_by("name ~* ?", "#{word}")
+    mod_type = "weapon" if mod_message == "attack"
+    mod_type = "armor" if mod_message == "defend"
+    equipment = actor.character.modifiers.find_by("name ~* ?", "#{mod_type}")
     case equipment.name
-    when "weapon" then return [" +", equipment.value, mod]
-    when "armor" then return [" ", -equipment.value, mod]
+    when "weapon" then return [" +", equipment.value, mod_message]
+    when "armor" then return [" ", -equipment.value, mod_message]
     end
   end
 
@@ -99,7 +99,8 @@ class Message < ApplicationRecord
 
   def build_roll_message(rolls, attach = nil, dropped = nil, mod = nil)
     total = rolls.sum
-    attaches = mods = ""
+    mods = ""
+    attaches = []
     if attach
       attaches = [attach.op, attach.mod].join
       attaches = pierce_armor(mod, attaches) if mod
@@ -110,18 +111,21 @@ class Message < ApplicationRecord
       total += mod[1]
     end
     "#{self.user_name} rolls #{self.body}, resulting in"\
-    " *#{rolls.join(", ")}#{mod_message(mods)} #{attaches.join("")}* for a total of"\
+    " *#{rolls.join(", ")}#{mod_message(mods)}#{attaches_message(attaches)}* for a total of"\
     " *#{total}*#{dropped_message(dropped)}"
   end
 
   def pierce_armor(mod = nil, attaches)
     if mod[2] == "defend"
       defend = mod[0..1].join
-      attaches[1] = defend[2] if attaches[0..1].to_i > defend[0..1].to_i
-      [attaches, " piercing damage"]
-    else
-      [attaches]
+      attaches[1] = defend[2] if attaches.to_i > defend[0..1].to_i
+      return [attaches, " piercing damage"]
     end
+    [attaches, ""]
+  end
+
+  def attaches_message(attaches = nil)
+    " #{[attaches].join("")}" if attaches.present?
   end
 
   def mod_message(mods = nil)
