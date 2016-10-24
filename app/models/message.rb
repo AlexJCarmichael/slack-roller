@@ -102,8 +102,8 @@ class Message < ApplicationRecord
     mods = ""
     attaches = []
     if attach
-      attaches = [attach.op, attach.mod].join
-      attaches = pierce_armor(mod, attaches) if mod
+      attaches = [[attach.op, attach.mod].join, ""]
+      attaches = pierce_armor(mod, attaches[0]) if mod
       total += attaches[0].to_i
     end
     if mod
