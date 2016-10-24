@@ -86,43 +86,47 @@ class Message < ApplicationRecord
     word = "armor" if mod == "defend"
     equipment = actor.character.modifiers.find_by("name ~* ?", "#{word}")
     case equipment.name
-    when "weapon" then return [" +", equipment.value]
-    when "armor" then return [" ", -equipment.value]
+    when "weapon" then return [" +", equipment.value, mod]
+    when "armor" then return [" ", -equipment.value, mod]
     end
   end
 
   def sorted_drop(rolls)
     rolls.sort!
-    if self.body[/high/]
-      dropped = rolls.pop
-    else
-      dropped = rolls.shift
-    end
+    self.body[/high/] ? dropped = rolls.pop : dropped = rolls.shift
     [rolls, dropped]
   end
 
   def build_roll_message(rolls, attach = nil, dropped = nil, mod = nil)
     total = rolls.sum
-    mods = ""
-    attaches = ""
+    attaches = mods = ""
     if attach
       attaches = [attach.op, attach.mod].join
-      total = total.public_send(attach.op, attach.mod)
+      attaches = pierce_armor(mod, attaches) if mod
+      total += attaches[0].to_i
     end
     if mod
-      total += mod[1]
       mods = mod
+      total += mod[1]
     end
     "#{self.user_name} rolls #{self.body}, resulting in"\
-    " *#{rolls.join(", ")}#{mod_message(mods)} #{attaches}* for a total of"\
+    " *#{rolls.join(", ")}#{mod_message(mods)} #{attaches.join("")}* for a total of"\
     " *#{total}*#{dropped_message(dropped)}"
+  end
+
+  def pierce_armor(mod = nil, attaches)
+    if mod[2] == "defend"
+      defend = mod[0..1].join
+      attaches[1] = defend[2] if attaches[0..1].to_i > defend[0..1].to_i
+      [attaches, " piercing damage"]
+    else
+      [attaches]
+    end
   end
 
   def mod_message(mods = nil)
     "#{mods[0]}#{mods[1]}"
   end
-
-
 
   def dropped_message(dropped = nil)
     " _dropped #{dropped}_" if dropped
