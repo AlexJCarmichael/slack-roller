@@ -36,7 +36,7 @@ class Message < ApplicationRecord
         self.body = build_roll_message(rolls, nil, dropped, stat_mod)
       end
     else
-      self.body = build_roll_message(roll, nil, nil, stat_mod)
+      self.body = build_roll_message(roll, attach, nil, stat_mod)
     end
   end
 
@@ -85,15 +85,19 @@ class Message < ApplicationRecord
 
   def build_roll_message(rolls, attach = nil, dropped = nil, stat_mod = nil)
     total = rolls.sum
-    total = total.public_send(attach.op, attach.mod) if attach
     mods = ""
+    total = total.public_send(attach.op, attach.mod) if attach
     if stat_mod
       total += stat_mod[1]
       mods = stat_mod
     end
     "#{self.user_name} rolls #{self.body}, resulting in"\
-    " *#{rolls.join(", ")}*#{mods[0]}#{mods[1]} for a total of"\
+    " *#{rolls.join(", ")}#{mod_message(mods)}* for a total of"\
     " *#{total}*#{dropped_message(dropped)}"
+  end
+
+  def mod_message(mods = nil)
+    "#{mods[0]}#{mods[1]}"
   end
 
   def dropped_message(dropped = nil)
