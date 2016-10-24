@@ -17,6 +17,7 @@ class Message < ApplicationRecord
                [:sides_to_die, 'd\d*'],
                [:dropped_die, 'drop'],
                [:attachment, '([-\+\*\\/] ?)\d*'],
+               [:stat, 'strength|dexterity|constitution|intelligence|wisdom|charisma'],
                [:stat_mod, 'str|dex|con|int|wis|cha'],
                [:equipment_mod, 'weapon|armor']
              ]
@@ -24,6 +25,7 @@ class Message < ApplicationRecord
   def roll_dice
     roll_params = parse_message
     mod = stat_rolls(roll_params[:stat_mod]) if roll_params[:stat_mod]
+    mod = stat(roll_params[:stat]) if roll_params[:stat]
     mod = equipment_rolls(roll_params[:equipment_mod]) if roll_params[:equipment_mod]
     if self.body[/\d{1,3}d\d{1,3}/]
       roll_params = numberize_die(roll_params)
@@ -56,6 +58,12 @@ class Message < ApplicationRecord
 
   def roll(num_times = 2, sides = 6)
     num_times.times.collect { return_die_result(sides) }
+  end
+
+  def stat(mod)
+    actor = Actor.find_by(name: self.user_name)
+    stat = actor.character.stats.find_by("name ~* ?", "#{mod}")
+    [" +", stat.value]
   end
 
   def stat_rolls(mod)
