@@ -119,7 +119,7 @@ class Message < ApplicationRecord
     if mod[2] == "defend"
       defend = mod[0..1].join
       attaches[1] = defend[2] if attaches.to_i > defend[0..1].to_i
-      return [attaches, " piercing damage"]
+      return [attaches, "(piercing)"]
     end
     [attaches, ""]
   end
