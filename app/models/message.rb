@@ -73,7 +73,7 @@ class Message < ApplicationRecord
     when (1..3)   then return [" ", -3]
     when (4..5)   then return [" ", -2]
     when (6..8)   then return [" ", -1]
-    when (9..12)  then return [" ", 0]
+    when (9..12)  then return [" +", 0]
     when (13..15) then return [" +", 1]
     when (16..17) then return [" +", 2]
     when (18)     then return [" +", 3]
