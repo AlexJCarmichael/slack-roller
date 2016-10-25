@@ -3,7 +3,7 @@ require 'test_helper'
 class MessageTest < ActiveSupport::TestCase
   def setup
 
-    @msg = Message.new
+    @msg = Message.new(body: "", user_name: "dane")
     @msg1 = Message.new(body: "3d6", user_name: "dane")
     @msg2 = Message.new(body: "2d6 + 2", user_name: "dane")
     @msg3 = Message.new(body: "4d8 - 3", user_name: "dane")
@@ -57,21 +57,21 @@ class MessageTest < ActiveSupport::TestCase
 
 
   test "numberize die" do
-    assert_equal({ times_rolled: 2, sides_to_die: 6, modifier: nil, attachment: nil} ,
+    assert_equal({ times_rolled: 2, sides_to_die: 6, modifier: nil, attachment: nil},
                  @msg.numberize_die(@roll_params1))
-    assert_equal({ times_rolled: 2, sides_to_die: 6, modifier: "+ 2", attachment: nil} ,
+    assert_equal({ times_rolled: 2, sides_to_die: 6, modifier: "+ 2", attachment: nil},
                  @msg.numberize_die(@roll_params2))
   end
 
   test "rolling two six-sided die" do
-    result = @msg.roll
+    result = @msg.dice
     assert_equal(2, result.length)
     assert(result[0] >= 1 && result[0] <= 6)
     assert(result[1] >= 1 && result[1] <= 6)
   end
 
   test "rolling four eight-sided die" do
-    result = @msg.roll(4, 8)
+    result = @msg.dice(4, 8)
     assert_equal(4, result.length)
     assert(result[0] >= 1 && result[0] <= 8)
     assert(result[1] >= 1 && result[1] <= 8)
@@ -99,7 +99,8 @@ class MessageTest < ActiveSupport::TestCase
     assert(result2[0].first >= result2[1] )
   end
 
-  test "building the roll message" do
+  test "building the
+   message" do
     result1 = @msg1.build_roll_message([2,6,4])
     result2 = @msg2.build_roll_message([4,5], Attachment.new("+", "2"))
     result3 = @msg4.build_roll_message([5,6], Attachment.new("+", "2"), 4)

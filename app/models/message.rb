@@ -43,19 +43,23 @@ class Message < ApplicationRecord
       roll_params[:times_rolled] = 2
       roll_params[:sides_to_die] = 6
     end
-    roll_params
+    return roll_params
   end
 
   def argument_definer(roll_params)
     rolls = dice(roll_params[:times_rolled], roll_params[:sides_to_die])
     attach = Attachment.new(roll_params[:attachment][0], roll_params[:attachment][/\d{1,3}/]) if roll_params[:attachment]
-    dropped = sorted_drop(rolls) if roll_params[:dropped_die]
+    rolls, dropped = sorted_drop(rolls) if roll_params[:dropped_die]
     mod = mod_definer(roll_params)
     [rolls, attach, dropped, mod]
   end
 
-  def dice(num_times, sides)
+  def dice(num_times = 2, sides = 6)
     num_times.times.collect { return_die_result(sides) }
+  end
+
+  def return_die_result(sides)
+    SecureRandom.random_number(1..sides)
   end
 
   def mod_definer(roll_params)
@@ -99,15 +103,19 @@ class Message < ApplicationRecord
   def sorted_drop(rolls)
     rolls.sort!
     self.body[/high/] ? dropped = rolls.pop : dropped = rolls.shift
-    dropped
+    [rolls, dropped]
   end
 
-  def build_roll_message(rolls, attach, dropped, mod)
+  def build_roll_message(rolls = nil, attach = nil, dropped = nil, mod = nil)
     mod.present? ? mod = mod : mod = ""
     attach.present? ? attachments = attachment_definer(attach, mod) : attachments = []
     total = rolls.sum
     total += attachments[0].to_i
     total += mod[1].to_i
+    message_output(rolls, mod, attachments, total, dropped)
+  end
+
+  def message_output(rolls, mod, attachments, total, dropped)
     "#{self.user_name} rolls #{self.body}, resulting in"\
     " *#{rolls.join(", ")}#{mod_message(mod)}#{attachments_message(attachments)}* for a total of"\
     " *#{total}*#{dropped_message(dropped)}"
@@ -137,9 +145,5 @@ class Message < ApplicationRecord
 
   def dropped_message(dropped = nil)
     " _dropped #{dropped}_" if dropped
-  end
-
-  def return_die_result(sides)
-    SecureRandom.random_number(1..sides)
   end
 end
