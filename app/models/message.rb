@@ -22,30 +22,16 @@ class Message < ApplicationRecord
                [:equipment_mod, 'attack|defend']
              ]
 
-  def roll_dice
-    roll_params = numberize_die(parse_message)
-    mod = mod_definer(roll_params)
-    rolls = rolls_definer(roll_params)
-    rolls, dropped = sorted_drop(rolls) if roll_params[:dropped_die]
-    attach = Attachment.new(roll_params[:attachment][0], roll_params[:attachment][/\d{1,3}/]) if roll_params[:attachment]
-    self.body = build_roll_message(rolls, attach, dropped, mod)
-  end
-
-  def mod_definer(roll_params)
-    return mod = stat(roll_params[:stat]) if roll_params[:stat]
-    return mod = stat_rolls(roll_params[:stat_mod]) if roll_params[:stat_mod]
-    mod = equipment_rolls(roll_params[:equipment_mod]) if roll_params[:equipment_mod]
-  end
-
-  def rolls_definer(roll_params)
-    return rolls = roll(roll_params[:times_rolled], roll_params[:sides_to_die]) if (roll_params[:times_rolled] && roll_params[:sides_to_die])
-    rolls = roll(2, 6)
-  end
-
   def parse_message
     Hash[MODIFIERS.map do |value, reg_ex|
-      [ value, self.body[Regexp.new reg_ex] ]
+     [ value, self.body[Regexp.new reg_ex] ]
     end]
+  end
+
+  def roll_dice
+    roll_params = numberize_die(parse_message)
+    rolls, attach, dropped, mod = argument_definer(roll_params)
+    self.body = build_roll_message(rolls, attach, dropped, mod)
   end
 
   def numberize_die(parse_message)
@@ -53,23 +39,42 @@ class Message < ApplicationRecord
     if self.body[/\d{1,3}d\d{1,3}/]
       roll_params[:times_rolled] = roll_params[:times_rolled].to_i
       roll_params[:sides_to_die] = roll_params[:sides_to_die][/\d{1,3}/].to_i
+    else
+      roll_params[:times_rolled] = 2
+      roll_params[:sides_to_die] = 6
     end
     roll_params
   end
 
-  def roll(num_times = 2, sides = 6)
+  def argument_definer(roll_params)
+    rolls = dice(roll_params[:times_rolled], roll_params[:sides_to_die])
+    attach = Attachment.new(roll_params[:attachment][0], roll_params[:attachment][/\d{1,3}/]) if roll_params[:attachment]
+    dropped = sorted_drop(rolls) if roll_params[:dropped_die]
+    mod = mod_definer(roll_params)
+    [rolls, attach, dropped, mod]
+  end
+
+  def dice(num_times, sides)
     num_times.times.collect { return_die_result(sides) }
   end
 
+  def mod_definer(roll_params)
+    return stat(roll_params[:stat]) if roll_params[:stat]
+    return stat_rolls(roll_params[:stat_mod]) if roll_params[:stat_mod]
+    battle_rolls(roll_params[:equipment_mod]) if roll_params[:equipment_mod]
+  end
+
+  def find_actor
+    Actor.find_by(name: self.user_name)
+  end
+
   def stat(mod)
-    actor = Actor.find_by(name: self.user_name)
-    stat = actor.character.stats.find_by("name ~* ?", "#{mod}")
+    stat = find_actor.character.stats.find_by("name ~* ?", "#{mod}")
     [" +", stat.value]
   end
 
   def stat_rolls(mod)
-    actor = Actor.find_by(name: self.user_name)
-    stat = actor.character.stats.find_by("name ~* ?", "#{mod}")
+    stat = find_actor.character.stats.find_by("name ~* ?", "#{mod}")
     case stat.value
     when (1..3)   then return [" ", -3]
     when (4..5)   then return [" ", -2]
@@ -81,42 +86,39 @@ class Message < ApplicationRecord
     end
   end
 
-  def equipment_rolls(mod_message)
-    actor = Actor.find_by(name: self.user_name)
-    mod_type = "weapon" if mod_message == "attack"
-    mod_type = "armor" if mod_message == "defend"
-    equipment = actor.character.modifiers.find_by("name ~* ?", "#{mod_type}")
+  def battle_rolls(mod)
+    mod_type = "weapon" if mod == "attack"
+    mod_type = "armor" if mod == "defend"
+    equipment = find_actor.character.modifiers.find_by("name ~* ?", "#{mod_type}")
     case equipment.name
-    when "weapon" then return [" +", equipment.value, mod_message]
-    when "armor" then return [" ", -equipment.value, mod_message]
+    when "weapon" then return [" +", equipment.value, mod]
+    when "armor" then return [" ", -equipment.value, mod]
     end
   end
 
   def sorted_drop(rolls)
     rolls.sort!
     self.body[/high/] ? dropped = rolls.pop : dropped = rolls.shift
-    [rolls, dropped]
+    dropped
   end
 
-  def build_roll_message(rolls, attach = nil, dropped = nil, mod = nil)
+  def build_roll_message(rolls, attach, dropped, mod)
+    mod.present? ? mod = mod : mod = ""
+    attach.present? ? attachments = attachment_definer(attach, mod) : attachments = []
     total = rolls.sum
-    mods = ""
-    attachments = []
-    if attach
-      attachments = [[attach.op, attach.mod].join, ""]
-      attachments = pierce_armor(mod, attachments[0]) if mod
-      total += attachments[0].to_i
-    end
-    if mod
-      mods = mod
-      total += mod[1]
-    end
+    total += attachments[0].to_i
+    total += mod[1].to_i
     "#{self.user_name} rolls #{self.body}, resulting in"\
-    " *#{rolls.join(", ")}#{mod_message(mods)}#{attachments_message(attachments)}* for a total of"\
+    " *#{rolls.join(", ")}#{mod_message(mod)}#{attachments_message(attachments)}* for a total of"\
     " *#{total}*#{dropped_message(dropped)}"
   end
 
-  def pierce_armor(mod = nil, attachments)
+  def attachment_definer(attach, mod)
+    attachments = [[attach.op, attach.mod].join, ""]
+    attachments = pierce_armor(mod, attachments[0]) if mod
+  end
+
+  def pierce_armor(mod, attachments)
     if mod[2] == "defend"
       defend = mod[0..1].join
       attachments[1] = defend[2] if attachments.to_i > defend[0..1].to_i
@@ -129,8 +131,8 @@ class Message < ApplicationRecord
     " #{[attachments].join("")}" if attachments.present?
   end
 
-  def mod_message(mods = nil)
-    "#{mods[0]}#{mods[1]}"
+  def mod_message(mod)
+    "#{mod[0]}#{mod[1]}"
   end
 
   def dropped_message(dropped = nil)
