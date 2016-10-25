@@ -100,32 +100,32 @@ class Message < ApplicationRecord
   def build_roll_message(rolls, attach = nil, dropped = nil, mod = nil)
     total = rolls.sum
     mods = ""
-    attaches = []
+    attachments = []
     if attach
-      attaches = [[attach.op, attach.mod].join, ""]
-      attaches = pierce_armor(mod, attaches[0]) if mod
-      total += attaches[0].to_i
+      attachments = [[attach.op, attach.mod].join, ""]
+      attachments = pierce_armor(mod, attachments[0]) if mod
+      total += attachments[0].to_i
     end
     if mod
       mods = mod
       total += mod[1]
     end
     "#{self.user_name} rolls #{self.body}, resulting in"\
-    " *#{rolls.join(", ")}#{mod_message(mods)}#{attaches_message(attaches)}* for a total of"\
+    " *#{rolls.join(", ")}#{mod_message(mods)}#{attachments_message(attachments)}* for a total of"\
     " *#{total}*#{dropped_message(dropped)}"
   end
 
-  def pierce_armor(mod = nil, attaches)
+  def pierce_armor(mod = nil, attachments)
     if mod[2] == "defend"
       defend = mod[0..1].join
-      attaches[1] = defend[2] if attaches.to_i > defend[0..1].to_i
-      return [attaches, "(piercing)"]
+      attachments[1] = defend[2] if attachments.to_i > defend[0..1].to_i
+      return [attachments, "(piercing)"]
     end
-    [attaches, ""]
+    [attachments, ""]
   end
 
-  def attaches_message(attaches = nil)
-    " #{[attaches].join("")}" if attaches.present?
+  def attachments_message(attachments = nil)
+    " #{[attachments].join("")}" if attachments.present?
   end
 
   def mod_message(mods = nil)
