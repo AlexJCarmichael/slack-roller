@@ -23,25 +23,23 @@ class Message < ApplicationRecord
              ]
 
   def roll_dice
-    roll_params = parse_message
-    mod = stat_rolls(roll_params[:stat_mod]) if roll_params[:stat_mod]
-    mod = stat(roll_params[:stat]) if roll_params[:stat]
+    roll_params = numberize_die(parse_message)
+    mod = mod_definer(roll_params)
+    rolls = rolls_definer(roll_params)
+    rolls, dropped = sorted_drop(rolls) if roll_params[:dropped_die]
+    attach = Attachment.new(roll_params[:attachment][0], roll_params[:attachment][/\d{1,3}/]) if roll_params[:attachment]
+    self.body = build_roll_message(rolls, attach, dropped, mod)
+  end
+
+  def mod_definer(roll_params)
+    return mod = stat(roll_params[:stat]) if roll_params[:stat]
+    return mod = stat_rolls(roll_params[:stat_mod]) if roll_params[:stat_mod]
     mod = equipment_rolls(roll_params[:equipment_mod]) if roll_params[:equipment_mod]
-    if self.body[/\d{1,3}d\d{1,3}/]
-      roll_params = numberize_die(roll_params)
-      rolls = roll(roll_params[:times_rolled],
-                   roll_params[:sides_to_die])
-      rolls, dropped = sorted_drop(rolls) if roll_params[:dropped_die]
-      if roll_params[:attachment]
-        attach = Attachment.new(roll_params[:attachment][0],
-                                roll_params[:attachment][/\d{1,3}/])
-        self.body = build_roll_message(rolls, attach, dropped, mod)
-      else
-        self.body = build_roll_message(rolls, nil, dropped, mod)
-      end
-    else
-      self.body = build_roll_message(roll, attach, nil, mod)
-    end
+  end
+
+  def rolls_definer(roll_params)
+    return rolls = roll(roll_params[:times_rolled], roll_params[:sides_to_die]) if (roll_params[:times_rolled] && roll_params[:sides_to_die])
+    rolls = roll(2, 6)
   end
 
   def parse_message
@@ -50,10 +48,13 @@ class Message < ApplicationRecord
     end]
   end
 
-  def numberize_die(roll_params)
-    roll_params[:times_rolled] = roll_params[:times_rolled].to_i
-    roll_params[:sides_to_die] = roll_params[:sides_to_die][/\d{1,3}/].to_i
-    return roll_params
+  def numberize_die(parse_message)
+    roll_params = parse_message
+    if self.body[/\d{1,3}d\d{1,3}/]
+      roll_params[:times_rolled] = roll_params[:times_rolled].to_i
+      roll_params[:sides_to_die] = roll_params[:sides_to_die][/\d{1,3}/].to_i
+    end
+    roll_params
   end
 
   def roll(num_times = 2, sides = 6)
