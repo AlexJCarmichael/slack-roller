@@ -65,8 +65,26 @@ class CharactersController < ApplicationController
                  }
   end
 
+  def equip
+    actor = Actor.find_by(name: params[:user_name])
+    character = Character.find_by(actor_id: actor.id)
+    weapon = Weapon.find_by(name: params[:text])
+    if weapon = Weapon.find_by(name: params[:text])
+      character.character_weapon.destroy if character.character_weapon.present?
+      CharacterWeapon.create!(character: character, weapon: weapon)
+      response = "#{character.name} equipped #{weapon.name}"
+    end
+    render json: { response_type: "in_channel",
+                   text: response
+                 }
+  end
+
   private
   def error_message(obj)
     "#{obj.errors.first[0].capitalize} #{obj.errors.first[1]}."
+  end
+
+  def weapon_params
+    params.permit(:text, :user_name)
   end
 end

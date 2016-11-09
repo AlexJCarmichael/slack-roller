@@ -25,14 +25,9 @@ class WeaponsController < ApplicationController
     weapon_name = Weapon.new
     name_parse = weapon_name.find_weapon(params[:text])
     weapon = Weapon.find_by(name: name_parse)
-    # wealpon = Weapon.find_by(name: "name")
     render json: { response_type: "in_channel",
                    text: weapon.weapon_message
                  }
-
-  end
-
-  def equip
   end
 
   private

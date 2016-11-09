@@ -7,7 +7,9 @@ class Character < ApplicationRecord
   has_many :stats, through: :character_stats, dependent: :destroy
   has_many :character_modifiers, dependent: :destroy
   has_many :modifiers, through: :character_modifiers, dependent: :destroy
-  has_many :character_weapons
+  has_one  :character_weapon, dependent: :destroy
+  has_one  :weapon, through: :character_weapon
+
 
   validates :name, presence: true, uniqueness: true
 
