@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20161019225458) do
+ActiveRecord::Schema.define(version: 20161109031227) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -48,6 +48,15 @@ ActiveRecord::Schema.define(version: 20161019225458) do
     t.index ["stat_id"], name: "index_character_stats_on_stat_id", using: :btree
   end
 
+  create_table "character_weapons", force: :cascade do |t|
+    t.integer  "character_id"
+    t.integer  "weapon_id"
+    t.datetime "created_at",   null: false
+    t.datetime "updated_at",   null: false
+    t.index ["character_id"], name: "index_character_weapons_on_character_id", using: :btree
+    t.index ["weapon_id"], name: "index_character_weapons_on_weapon_id", using: :btree
+  end
+
   create_table "characters", force: :cascade do |t|
     t.string   "name",       null: false
     t.integer  "actor_id"
@@ -77,10 +86,18 @@ ActiveRecord::Schema.define(version: 20161019225458) do
     t.datetime "updated_at",             null: false
   end
 
+  create_table "weapons", force: :cascade do |t|
+    t.string   "name"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
   add_foreign_key "actor_characters", "actors"
   add_foreign_key "actor_characters", "characters"
   add_foreign_key "character_modifiers", "characters"
   add_foreign_key "character_modifiers", "modifiers"
   add_foreign_key "character_stats", "characters"
   add_foreign_key "character_stats", "stats"
+  add_foreign_key "character_weapons", "characters"
+  add_foreign_key "character_weapons", "weapons"
 end
