@@ -11,6 +11,7 @@ Rails.application.routes.draw do
   post "equip",              to: 'characters#equip',                   as: "equip"
 
   post "new_weapon",         to: 'weapons#new_weapon',                 as: "new_weapon"
+  post "edit_weapon",        to: 'weapons#edit_weapon',                as: "edit_weapon"
   post "weapons",            to: 'weapons#weapons',                    as: "weapons"
   post "weapon",             to: 'weapons#weapon',                     as: "weapon"
 

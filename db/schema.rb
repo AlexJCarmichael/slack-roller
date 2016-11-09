@@ -88,6 +88,7 @@ ActiveRecord::Schema.define(version: 20161109031227) do
 
   create_table "weapons", force: :cascade do |t|
     t.string   "name"
+    t.string   "quality"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
   end
