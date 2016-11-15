@@ -1,6 +1,6 @@
 class Stat < ApplicationRecord
   has_one :character_stat, dependent: :destroy
-  has_one :character, through: :character_stat, dependent: :destroy
+  has_one :character, through: :character_stat
 
   STATS_ARR = %w(strength dexterity constitution intelligence wisdom charisma)
 
