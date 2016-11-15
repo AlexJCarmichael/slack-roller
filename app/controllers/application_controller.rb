@@ -9,6 +9,11 @@ class ApplicationController < ActionController::API
       /character <character_name>
       /characters <user_name>
       /roster
-      /character_roster\n"""
+      /character_roster\n
+      /new_weapon
+      /edit_weapon
+      /weapons
+      /weapon
+      /equip <weapon>"""
   end
 end
