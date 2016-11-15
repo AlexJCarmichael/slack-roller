@@ -34,9 +34,10 @@ class WeaponsController < ApplicationController
   end
 
   def weapons
-    output = Weapon.all.map do |weapon|
-      "#{weapon.quality} #{weapon.name}" if weapon.quality
-      "#{weapon.name}" unless weapon.quality
+    output = []
+    Weapon.all.each do |weapon|
+      output.push("#{weapon.quality} #{weapon.name}") if weapon.quality
+      output.push("#{weapon.name}") unless weapon.quality
     end
     render json: { response_type: "in_channel",
                    text: output.join("\n")
