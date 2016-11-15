@@ -49,17 +49,13 @@ class Weapon < ApplicationRecord
       parsed_weapon = parse_message(message)
       parsed_weapon["name"]
     rescue
-      begin
-        message
-      rescue
-        a = message.split(", ")
-        a[0]
-      end
+      a, = message.split(", ")
+      a
     end
   end
 
   def weapon_message
     return "Weapon: #{quality } #{name}" if quality
-    "Weapon #{name}"
+    "Weapon: #{name}"
   end
 end

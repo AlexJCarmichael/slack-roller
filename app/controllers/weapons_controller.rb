@@ -21,8 +21,10 @@ class WeaponsController < ApplicationController
 
   def edit_weapon
     actor_name = params[:user_name]
-    if weapon = find_weapon
-      weapon.edit_weapon(params[:text])
+    message = params[:text].split(", ")[1..-1]
+    message = message.join(", ")
+    if weapon = find_weapon(params[:text])
+      weapon.edit_weapon(message)
       weapon.save
       output = weapon.edit_weapon_message(actor_name)
     else
@@ -45,7 +47,7 @@ class WeaponsController < ApplicationController
   end
 
   def weapon
-    if weapon = find_weapon
+    if weapon = find_weapon(params[:text])
       output = weapon.weapon_message
     else
       output = "This weapon does not exist yet. Try creating it with `/new_weapon name: <weapon_name>`"
@@ -56,8 +58,8 @@ class WeaponsController < ApplicationController
   end
 
   private
-  def find_weapon
-    name_parse = Weapon.new.weapon_name(params[:text])
+  def find_weapon(message)
+    name_parse = Weapon.new.weapon_name(message)
     weapon = Weapon.find_by(name: name_parse)
     weapon
   end

@@ -28,6 +28,12 @@ class WeaponsControllerTest < ActionDispatch::IntegrationTest
     assert_equal ({"response_type"=>"in_channel", "text"=>"dull sword has just been updated by mattrice!"}), JSON.parse(@response.body)
   end
 
+  test "edit a weapon's name that exists" do
+    post edit_weapon_path, params: { user_name: "mattrice", text: "sword, name: axe, quality: dull" }
+    assert_response :success
+    assert_equal ({"response_type"=>"in_channel", "text"=>"dull axe has just been updated by mattrice!"}), JSON.parse(@response.body)
+  end
+
   test "cannot edit a weapon that doesn't exists" do
     post edit_weapon_path, params: { user_name: "mattrice", text: "name: hammer, quality: dull" }
     assert_response :success
