@@ -38,7 +38,7 @@ class CharactersController < ApplicationController
 
   def display_character_sheet
     actor = Actor.find_by(name: params[:user_name])
-    character = Character.find_by(name: params[:text]) if Character.find_by(name: params[:text])
+    character = find_character
     bad_input = "Invalid input. Make sure you spelled the character's name correctly."
     output = actor.character.character_sheet
     output = character ? character.character_sheet : bad_input unless (params[:text] == "")
@@ -49,7 +49,7 @@ class CharactersController < ApplicationController
 
   def view_characters
     actor = Actor.find_by(name: params[:user_name])
-    other_actor = Actor.find_by(name: params[:text]) if Actor.find_by(name: params[:text])
+    other_actor = find_actor
     bad_input = "Invalid input. Make sure you spelled the user's name correctly."
     output = actor.character_list
     output = other_actor ? other_actor.character_list : bad_input unless (params[:text] == "")
@@ -67,15 +67,16 @@ class CharactersController < ApplicationController
 
   def equip
     actor = Actor.find_by(name: params[:user_name])
-    character = Character.find_by(actor_id: actor.id)
-    weapon = Weapon.find_by(name: params[:text])
-    if weapon = Weapon.find_by(name: params[:text])
+    character = actor.character
+    if weapon = find_weapon
       character.character_weapon.destroy if character.character_weapon.present?
       CharacterWeapon.create!(character: character, weapon: weapon)
-      response = "#{character.name} equipped #{weapon.name}"
+      output = "#{character.name} equipped #{weapon.name}"
+    else
+      output = "Weapon does not exist. Create it by typing `/new_weapon name: <weapon_name>`"
     end
     render json: { response_type: "in_channel",
-                   text: response
+                   text: output
                  }
   end
 
@@ -84,7 +85,21 @@ class CharactersController < ApplicationController
     "#{obj.errors.first[0].capitalize} #{obj.errors.first[1]}."
   end
 
-  def weapon_params
-    params.permit(:text, :user_name)
+  def find_character
+    character_name = Character.new.character_name(params[:text])
+    character = Character.find_by(name: character_name)
+    character
+  end
+
+  def find_actor
+    actor_name = Actor.new.actor_name(params[:text])
+    actor = Actor.find_by(name: actor_name)
+    actor
+  end
+
+  def find_weapon
+    weapon_name = Weapon.new.weapon_name(params[:text])
+    weapon = Weapon.find_by(name: weapon_name)
+    weapon
   end
 end

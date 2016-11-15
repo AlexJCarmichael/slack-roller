@@ -11,4 +11,32 @@ class Actor < ApplicationRecord
     "#{name} has no characters registered yet."
   end
 
+  def parse_message(message)
+    message_arr = message.split(', ')
+    message_item = message_arr.map do |input|
+      a = input.split(' ')
+      a[0] = "\"" + a[0][0..-2] + "\"" + a[0][-1] + " \"" + a[1] + "\", "
+    end
+    b = message_item.join()
+    c = "{" + b[0..-3] + "}"
+    JSON.parse c
+  end
+
+  def self.find_char(message)
+    begin
+      parsed_message = Actor.new.parse_message(message)
+      parsed_message["name"]
+    rescue
+      message
+    end
+  end
+
+  def actor_name(message)
+    begin
+      parsed_actor = parse_message(message)
+      parsed_actor["name"]
+    rescue
+      message
+    end
+  end
 end

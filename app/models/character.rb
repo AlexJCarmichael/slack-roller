@@ -80,4 +80,13 @@ class Character < ApplicationRecord
       obj.find_by(name: name).value
     end
   end
+
+  def character_name(message)
+    begin
+      parsed_character = parse_message(message)
+      parsed_character["name"]
+    rescue
+      message
+    end
+  end
 end

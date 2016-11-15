@@ -1,3 +1,5 @@
+require 'test_helper'
+
 class ActorsControllerTest < ActionDispatch::IntegrationTest
 
   test "should register an actor" do

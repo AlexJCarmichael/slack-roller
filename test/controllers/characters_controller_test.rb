@@ -134,4 +134,16 @@ class CharactersControllerTest < ActionDispatch::IntegrationTest
     assert_response :success
     assert_equal ({"response_type"=>"in_channel", "text"=>"Thūm - mattrice\nCrank - mattrice\nDanekin-Skydangler - dane"}), JSON.parse(@response.body)
   end
+
+  test "Equipping a weapon" do
+    post equip_path, params: { user_name: "mattrice", text: "sword" }
+    assert_response :success
+    assert_equal ({"response_type"=>"in_channel", "text"=>"Thūm equipped sword"}), JSON.parse(@response.body)
+  end
+
+  test "Cannot equip a weapon that does not exist" do
+    post equip_path, params: { user_name: "mattrice", text: "banana" }
+    assert_response :success
+    assert_equal ({"response_type"=>"in_channel", "text"=>"Weapon does not exist. Create it by typing `/new_weapon name: <weapon_name>`"}), JSON.parse(@response.body)
+  end
 end

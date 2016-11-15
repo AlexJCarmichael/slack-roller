@@ -4,31 +4,33 @@ class WeaponsController < ApplicationController
     message = params[:text]
     weapon = Weapon.new
     weapon.random_weapon(message) if message.blank?
-    weapon.new_weapon(message) if message.present?
-    if weapon.save
-      render json: { response_type: "in_channel",
-                     text: weapon.new_weapon_message(actor_name)
-                   }
-    else
-      render json: { response_type: "in_channel",
-                     text: error_message(weapon)
-                   }
+    begin
+      weapon.new_weapon(message) if message.present?
+      if weapon.save
+        output = weapon.new_weapon_message(actor_name)
+      else
+        output = error_message(weapon)
+      end
+    rescue
+      output = "Invalid Input. Type `/new_weapon name: <weapon_name>, quality: <quality>`"
     end
+    render json: { response_type: "in_channel",
+                   text: output
+                 }
   end
 
   def edit_weapon
     actor_name = params[:user_name]
-    weapon = find_weapon
-    weapon.edit_weapon(params[:text])
-    if weapon.save
-      render json: { response_type: "in_channel",
-                     text: weapon.edit_weapon_message(actor_name)
-                   }
+    if weapon = find_weapon
+      weapon.edit_weapon(params[:text])
+      weapon.save
+      output = weapon.edit_weapon_message(actor_name)
     else
-      render json: { response_type: "in_channel",
-                     text: error_message(weapon)
-                   }
+      output = "This weapon does not exist yet. Try creating it with `/new_weapon name: <weapon_name>`"
     end
+    render json: { response_type: "in_channel",
+                   text: output
+                 }
   end
 
   def weapons
@@ -39,16 +41,19 @@ class WeaponsController < ApplicationController
   end
 
   def weapon
-    weapon = find_weapon
+    if weapon = find_weapon
+      output = weapon.weapon_message
+    else
+      output = "This weapon does not exist yet. Try creating it with `/new_weapon name: <weapon_name>`"
+    end
     render json: { response_type: "in_channel",
-                   text: weapon.weapon_message
+                   text: output
                  }
   end
 
   private
   def find_weapon
-    weapon_name = Weapon.new
-    name_parse = weapon_name.find_weapon(params[:text])
+    name_parse = Weapon.new.weapon_name(params[:text])
     weapon = Weapon.find_by(name: name_parse)
     weapon
   end

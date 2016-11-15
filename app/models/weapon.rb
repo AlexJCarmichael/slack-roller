@@ -29,7 +29,6 @@ class Weapon < ApplicationRecord
   end
 
   def edit_weapon(message)
-    return unless message.include?("name")
     parsed_weapon = parse_message(message)
     self.quality = parsed_weapon["quality"] if parsed_weapon["quality"]
   end
@@ -44,9 +43,13 @@ class Weapon < ApplicationRecord
     """#{name} has just been updated by #{actor_name}!"""
   end
 
-  def find_weapon(message)
-    parsed_weapon = parse_message(message)
-    parsed_weapon["name"]
+  def weapon_name(message)
+    begin
+      parsed_weapon = parse_message(message)
+      parsed_weapon["name"]
+    rescue
+      message
+    end
   end
 
   def weapon_message
