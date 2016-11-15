@@ -71,7 +71,8 @@ class CharactersController < ApplicationController
     if weapon = find_weapon
       character.character_weapon.destroy if character.character_weapon.present?
       CharacterWeapon.create!(character: character, weapon: weapon)
-      output = "#{character.name} equipped #{weapon.name}"
+      output = "#{character.name} equipped the #{weapon.name}"
+      output = "#{character.name} equipped the #{weapon.quality} #{weapon.name}" if weapon.quality
     else
       output = "Weapon does not exist. Create it by typing `/new_weapon name: <weapon_name>`"
     end
