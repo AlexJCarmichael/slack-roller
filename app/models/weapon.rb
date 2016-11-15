@@ -30,6 +30,7 @@ class Weapon < ApplicationRecord
 
   def edit_weapon(message)
     parsed_weapon = parse_message(message)
+    self.name = parsed_weapon["name"] if parsed_weapon["name"]
     self.quality = parsed_weapon["quality"] if parsed_weapon["quality"]
   end
 
@@ -48,11 +49,17 @@ class Weapon < ApplicationRecord
       parsed_weapon = parse_message(message)
       parsed_weapon["name"]
     rescue
-      message
+      begin
+        message
+      rescue
+        a = message.split(", ")
+        a[0]
+      end
     end
   end
 
   def weapon_message
-    """Weapon: #{name}"""
+    return "Weapon: #{quality } #{name}" if quality
+    "Weapon #{name}"
   end
 end

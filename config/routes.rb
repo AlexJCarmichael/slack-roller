@@ -1,7 +1,7 @@
 Rails.application.routes.draw do
-  get "helpdw", to: 'message#help', as: "helpdw"
+  get "helpdw",              to: 'message#help',                       as: "helpdw"
 
-  post "roll", to: 'message#roll', as: "roll"
+  post "roll",               to: 'message#roll',                       as: "roll"
 
   post "character",          to: 'characters#display_character_sheet', as: "character"
   post "characters",         to: 'characters#view_characters',         as: "characters"
@@ -15,8 +15,8 @@ Rails.application.routes.draw do
   post "weapons",            to: 'weapons#weapons',                    as: "weapons"
   post "weapon",             to: 'weapons#weapon',                     as: "weapon"
 
-  post "register",           to: 'actors#register',           as: "register"
-  post "register_character", to: 'actors#register_character', as: "register_character"
-  post "roster",             to: 'actors#roster',             as: "roster"
+  post "register",           to: 'actors#register',                    as: "register"
+  post "register_character", to: 'actors#register_character',          as: "register_character"
+  post "roster",             to: 'actors#roster',                      as: "roster"
 
 end
