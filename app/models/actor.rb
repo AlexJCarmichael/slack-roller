@@ -4,6 +4,8 @@ class Actor < ApplicationRecord
   has_one :actor_character, dependent: :destroy
   has_one :character, through: :actor_character, dependent: :destroy
 
+  has_one :roll_pool, dependent: :destroy
+
   validates :name, presence: true, uniqueness: true
 
   def character_list
