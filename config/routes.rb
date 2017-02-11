@@ -4,6 +4,7 @@ Rails.application.routes.draw do
   post "roll",               to: 'message#roll',                       as: "roll"
 
   post "roll_pool",          to: 'roll_pool#roll_pool',                as: "roll_pool"
+  post "modify_roll_pool",   to: 'roll_pool#modify_roll_pool',         as: "modify_roll_pool"
 
   post "character",          to: 'characters#display_character_sheet', as: "character"
   post "characters",         to: 'characters#view_characters',         as: "characters"
