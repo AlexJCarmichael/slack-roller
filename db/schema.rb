@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20161109031227) do
+ActiveRecord::Schema.define(version: 20170211010837) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -79,6 +79,14 @@ ActiveRecord::Schema.define(version: 20161109031227) do
     t.datetime "updated_at",             null: false
   end
 
+  create_table "roll_pools", force: :cascade do |t|
+    t.string   "pool"
+    t.integer  "actor_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["actor_id"], name: "index_roll_pools_on_actor_id", using: :btree
+  end
+
   create_table "stats", force: :cascade do |t|
     t.string   "name"
     t.integer  "value",      default: 0
@@ -101,4 +109,5 @@ ActiveRecord::Schema.define(version: 20161109031227) do
   add_foreign_key "character_stats", "stats"
   add_foreign_key "character_weapons", "characters"
   add_foreign_key "character_weapons", "weapons"
+  add_foreign_key "roll_pools", "actors"
 end
