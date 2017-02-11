@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20161109031227) do
+ActiveRecord::Schema.define(version: 20170211010241) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -65,6 +65,15 @@ ActiveRecord::Schema.define(version: 20161109031227) do
     t.index ["actor_id"], name: "index_characters_on_actor_id", using: :btree
   end
 
+  create_table "current_actors", force: :cascade do |t|
+    t.integer  "character_id"
+    t.integer  "actor_id"
+    t.datetime "created_at",   null: false
+    t.datetime "updated_at",   null: false
+    t.index ["actor_id"], name: "index_current_actors_on_actor_id", using: :btree
+    t.index ["character_id"], name: "index_current_actors_on_character_id", using: :btree
+  end
+
   create_table "messages", force: :cascade do |t|
     t.string   "body"
     t.datetime "created_at", null: false
@@ -77,6 +86,12 @@ ActiveRecord::Schema.define(version: 20161109031227) do
     t.integer  "value",      default: 0
     t.datetime "created_at",             null: false
     t.datetime "updated_at",             null: false
+  end
+
+  create_table "roll_pools", force: :cascade do |t|
+    t.string   "pool"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
   end
 
   create_table "stats", force: :cascade do |t|
@@ -101,4 +116,6 @@ ActiveRecord::Schema.define(version: 20161109031227) do
   add_foreign_key "character_stats", "stats"
   add_foreign_key "character_weapons", "characters"
   add_foreign_key "character_weapons", "weapons"
+  add_foreign_key "current_actors", "actors"
+  add_foreign_key "current_actors", "characters"
 end
