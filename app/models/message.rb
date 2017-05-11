@@ -48,10 +48,15 @@ class Message < ApplicationRecord
 
   def argument_definer(roll_params)
     rolls = dice(roll_params[:times_rolled], roll_params[:sides_to_die])
+    @rough_rolls = rolls
     attach = Attachment.new(roll_params[:attachment][0], roll_params[:attachment][/\d{1,3}/]) if roll_params[:attachment]
     rolls, dropped = sorted_drop(rolls) if roll_params[:dropped_die]
     mod = mod_definer(roll_params)
     [rolls, attach, dropped, mod]
+  end
+
+  def rough_rolls
+    @rough_rolls
   end
 
   def dice(num_times = 2, sides = 6)
